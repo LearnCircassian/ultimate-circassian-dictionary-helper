@@ -1,0 +1,191 @@
+
+    /*
+0, "Адыгабзэм изэхэф гущыIалъ",
+1, "Адыгэбзэ псалъалъэ",
+2, "Адыгэ-араб гущыIалъ",
+3, "Къардэн",
+4, "Яхуэмыфащэу лъэныкъуэ едгъэза псалъэхэр",
+5, "Тхьаркъуахъо",
+6, "Хъуажь",
+7, "Блэгъожъ",
+8, "Одэжьдэкъо",
+9, "Урыс-адыгэ школ псалъалъэ",
+10, "Абазэ",
+11, "Хъуажь",
+12, "ТIэшъу",
+13, "Adyghe-English Dictionary",
+14, "Adam Adyghe-English Dictionary",
+15, "English-Adyghe Dictionary",
+16, "Adam English-Adyghe Dictionary",
+17, "Jonty English-Kabardian Dictionary",
+18, "Ziwar English-Kabardian Dictionary",
+19, "Jonty Kabardian-Arabic Dictionary",
+20, "Amjad Kabardian-English Dictionary",
+21, "Jonty Kabardian-English Dictionary with Examples",
+22, "Jonty Kabardian-English Dictionary",
+23, "Ziwar Kabardian-English Dictionary",
+24, "Ziwar Kabardian-English Dictionary",
+25, "Kabardian-Russian Dictionary",
+26, "Jonty Kabardian-Russian Dictionary",
+27, "Jonty Kabardian-Turkish Dictionary",
+28, "Jonty Russian-Kabardian Dictionary",
+29, "Jonty Turkish-Kabardian Dictionary",
+     */
+
+    public static DictDetail[] getData() {
+        final String folderPath = "D:\\Github\\test\\CircassianDictHelperScript\\untitled\\src\\main\\resources\\jsonFiles\\";
+        return new DictDetail[]{
+                // Golden dictionaries ones
+                new DictDetail(
+                        folderPath + "Ady-Ady_AIG.json",
+                        0, // "Адыгабзэм изэхэф гущыIалъ",
+                        "Ady -> Ru",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Ady-Ady_AP.json",
+                        1, // "Адыгэбзэ псалъалъэ",
+                        "Kbd -> Ru",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Ady-Ara.json",
+                        2, // "Адыгэ-араб гущыIалъ",
+                        "Ady -> Ar",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Ady-Rus_Qarden.jsonn",
+                        3, // Къардэн"
+                        "Kbd -> Ru",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Ady-Rus_Sherdjes.json",
+                        4, // "Яхуэмыфащэу лъэныкъуэ едгъэза псалъэхэр",
+                        "Kbd -> Ru",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Ady-Rus_Tharkaho.json",
+                        5, // "Тхьаркъуахъо",
+                        "Ady -> Ru",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Ady-Tur_Huvaj.json",
+                        6, // "Хъуажь",
+                        "Ady/Kbd  -> Tu",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Rus-Ady_Blaghoj.json",
+                        7, // "Блэгъожъ",
+                        "Ru -> Ady",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Rus-Ady_UAG.json",
+                        8, // "Одэжьдэкъо",
+                        "Ru -> Ady",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Rus-Ady_UASP.json",
+                        9, // "Урыс-адыгэ школ псалъалъэ",
+                        "Ru -> Kbd",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Tur-Ady_Abaze.json",
+                        10, // "Абазэ",
+                        "Tu -> Kbd",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Tur-Ady_Huvaj.json",
+                        11, // "Хъуажь",
+                        "Tu -> Ady/Kbd",
+                        FormatType.HTML),
+                new DictDetail(
+                        folderPath + "Tur-Ady_Teshu.json",
+                        12, // "ТIэшъу",
+                        "Tu -> Ady",
+                        FormatType.HTML),
+                // New dictionaries
+                new DictDetail(
+                        folderPath + "Ady-En.json",
+                        13, // "Adyghe-English Dictionary",
+                        "Ady -> En",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Ady-En_Adam.json",
+                        14, // "Adam Adyghe-English Dictionary",
+                        "Ady -> En",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "En-Ady.json",
+                        15, // "English-Adyghe Dictionary",
+                        "En -> Ady",
+                        FormatType.REDIRECT),
+                new DictDetail(
+                        folderPath + "En-Ady_Adam.json",
+                        16, // "Adam English-Adyghe Dictionary",
+                        "En -> Ady",
+                        FormatType.REDIRECT),
+                new DictDetail(
+                        folderPath + "En-Kbd-Jonty.json",
+                        17, // "Jonty English-Kabardian Dictionary",
+                        "En -> Kbd",
+                        FormatType.REDIRECT),
+                new DictDetail(
+                        folderPath + "En-Kbd-Ziwar.json",
+                        18, // "Ziwar English-Kabardian Dictionary",
+                        "En -> Kbd",
+                        FormatType.REDIRECT),
+                new DictDetail(
+                        folderPath + "Kbd-Ar-Jonty.json",
+                        19, // "Jonty Kabardian-Arabic Dictionary",
+                        "Kbd -> Ar",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Kbd-En_Amjad.json",
+                        20, // "Amjad Kabardian-English Dictionary",
+                        "Kbd -> En",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Kbd-En-2-Jonty.json",
+                        21, // "Jonty Kabardian-English Dictionary with Examples",
+                        "Kbd -> En",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Kbd-En-Jonty.json",
+                        22, // "Jonty Kabardian-English Dictionary",
+                        "Kbd -> En",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Kbd-En-Ziwar.json",
+                        23, // "Ziwar Kabardian-English Dictionary",
+                        "Kbd -> En",
+                        FormatType.REDIRECT),
+                new DictDetail(
+                        folderPath + "Kbd-Ru&En.json",
+                        24, // "Ziwar Kabardian-English Dictionary",
+                        "Kbd -> En",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Kbd-Ru-2-Jonty.json",
+                        25, // "Kabardian-Russian Dictionary",
+                        "Kbd -> Ru",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Kbd-Ru-Jonty.json",
+                        26, // "Jonty Kabardian-Russian Dictionary",
+                        "Kbd -> Ru",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Kbd-Tu-Jonty.json",
+                        27, // "Jonty Kabardian-Turkish Dictionary",
+                        "Kbd -> Tu",
+                        FormatType.JSON),
+                new DictDetail(
+                        folderPath + "Ru-Kbd-Jonty.json",
+                        28, // "Jonty Russian-Kabardian Dictionary",
+                        "Ru -> Kbd",
+                        FormatType.REDIRECT),
+                new DictDetail(
+                        folderPath + "Tu-Kbd-Jonty.json",
+                        29, // "Jonty Turkish-Kabardian Dictionary",
+                        "Tu -> Kbd",
+                        FormatType.REDIRECT),
+        };
+    }
