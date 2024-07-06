@@ -49,7 +49,7 @@ func CreateFileWithContent(filePath string, dict *wordObject.DictionaryObject) {
 		}
 	}(f)
 
-	dictToJson, err := json.MarshalIndent(dict, "", " ")
+	dictToJson, err := json.MarshalIndent(dict, "", "\t")
 	if err != nil {
 		log.Fatalf("json marshal error: %v", err)
 		return
