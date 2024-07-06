@@ -24,6 +24,8 @@ func ReadFileLineByLine(filePath string, callback func(string, int)) {
 	}(f)
 
 	sc := bufio.NewScanner(f)
+	buf := make([]byte, 0, 64*1024)
+	sc.Buffer(buf, 1024*1024)
 	idx := 0
 	for sc.Scan() {
 		line := sc.Text() // GET the line string

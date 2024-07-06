@@ -49,15 +49,16 @@ type JontyWord struct {
 }
 
 func CallAllConverts() {
+	// convert0()
 	convert1()
 	// convert22()
 }
 
-// convert1() Адыгэбзэ псалъалъэ
-func convert1() {
-	dictObj := wordObject.NewDictionaryObject("Адыгэбзэ псалъалъэ", 1, "Kbd", "Ru")
+// convert0() Адыгабзэм изэхэф гущыIалъ
+func convert0() {
+	dictObj := wordObject.NewDictionaryObject("Адыгабзэм изэхэф гущы1алъ", 0, "Ady", "Ru")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Ady_AIG.json"
-	distFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\Ady-Ady_AIG.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Ady_AIG.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
 
 	utils.ReadFileLineByLine(srcFilePath, func(line string, idx int) {
@@ -91,6 +92,7 @@ func convert1() {
 		obj = strings.Trim(obj, " ")
 		obj = strings.Trim(obj, "\t")
 		obj = strings.Trim(obj, ",")
+		obj = strings.Trim(obj, "\"")
 		obj = strings.ReplaceAll(obj, "\\\"", "\u0022")
 		obj = convertIToCirStick(obj)
 
@@ -109,14 +111,73 @@ func convert1() {
 	}
 
 	utils.CreateFileWithContent(distFilePath, dictObj)
+}
 
+// convert1() Адыгэбзэ псалъалъэ
+func convert1() {
+	dictObj := wordObject.NewDictionaryObject("Адыгэбзэ псалъалъэ", 1, "Kbd", "Ru")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Ady_AP.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Ady_AP.json", dictObj.Id)
+	invalidLinesList := make([]string, 0)
+
+	utils.ReadFileLineByLine(srcFilePath, func(line string, idx int) {
+		var errMsg string
+		// split
+		line = strings.Trim(line, " ")
+		line = strings.Trim(line, "\t")
+		split := strings.SplitN(line, ":", 2)
+		if len(split) < 2 {
+			errMsg = fmt.Sprintf("Invalid line (0) %d: %s", idx, line)
+			invalidLinesList = append(invalidLinesList, errMsg)
+			fmt.Printf("%s\n", errMsg)
+			return
+		}
+
+		// first part
+		var spelling = split[0]
+		if strings.Count(spelling, "\"") != 2 {
+			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
+			invalidLinesList = append(invalidLinesList, errMsg)
+			fmt.Printf("%s\n", errMsg)
+			return
+		}
+		spelling = strings.Trim(spelling, "\"")
+		spelling = strings.Trim(spelling, " ")
+		spelling = strings.Trim(spelling, "\t")
+		spelling = strings.ToLower(spelling)
+		spelling = convertIToCirStick(spelling)
+
+		// second part
+		var obj = split[1]
+		obj = strings.Trim(obj, " ")
+		obj = strings.Trim(obj, "\t")
+		obj = strings.Trim(obj, ",")
+		obj = strings.Trim(obj, "\"")
+		obj = strings.ReplaceAll(obj, "\\\"", "\u0022")
+		obj = convertIToCirStick(obj)
+
+		// Check if word exist, if it does, add definition, otherwise create new word
+		if _, ok := dictObj.Words[spelling]; !ok {
+			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
+		}
+		dictObj.Words[spelling].AddOneSimpleDefinition(obj)
+		fmt.Printf("line %d: %s\n", idx, line)
+	})
+
+	// print invalid lines
+	fmt.Printf("\n--Invalid lines in %s:--\n", srcFilePath)
+	for idx, line := range invalidLinesList {
+		fmt.Printf("%d. %s\n", idx, line)
+	}
+
+	utils.CreateFileWithContent(distFilePath, dictObj)
 }
 
 // convert22() Kbd-En-Jonty.json
 func convert22() {
 	dictObj := wordObject.NewDictionaryObject("Jonty Kabardian-English Dictionary", 22, "Kbd", "En")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-En-Jonty.json"
-	distFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\Kbd-En-Jonty.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Kbd-En-Jonty.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
 
 	utils.ReadFileLineByLine(srcFilePath, func(line string, idx int) {
