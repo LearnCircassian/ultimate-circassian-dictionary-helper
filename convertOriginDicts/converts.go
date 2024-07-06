@@ -3,8 +3,6 @@ package converts
 import (
 	"encoding/json"
 	"fmt"
-	"log"
-	"os"
 	"strings"
 	"ultimate-circassian-dictionary-helper/utils"
 	"ultimate-circassian-dictionary-helper/wordObject"
@@ -51,11 +49,11 @@ type JontyWord struct {
 }
 
 func CallAllConverts() {
-	Convert22()
+	convert22()
 }
 
 // ConvertOldJsonToNewJson Convert 22. Kbd-En-Jonty.json
-func Convert22() {
+func convert22() {
 	dictObj := wordObject.NewDictionaryObject("Jonty Kabardian-English Dictionary", 22, "Kbd", "En")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-En-Jonty.json"
 	distFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\Kbd-En-Jonty.json"
@@ -70,7 +68,7 @@ func Convert22() {
 		if len(split) < 2 {
 			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
 			invalidLinesList = append(invalidLinesList, errMsg)
-			println(errMsg)
+			fmt.Printf("%s\n", errMsg)
 			return
 		}
 
@@ -79,7 +77,7 @@ func Convert22() {
 		if strings.Count(spelling, "\"") != 2 {
 			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
 			invalidLinesList = append(invalidLinesList, errMsg)
-			println(errMsg)
+			fmt.Printf("%s\n", errMsg)
 			return
 		}
 		spelling = strings.Trim(spelling, "\"")
@@ -93,7 +91,7 @@ func Convert22() {
 		if err := json.Unmarshal([]byte(obj), &objMap); err != nil {
 			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
 			invalidLinesList = append(invalidLinesList, errMsg)
-			println(errMsg)
+			fmt.Printf("%s\n", errMsg)
 			return
 		}
 
@@ -108,22 +106,10 @@ func Convert22() {
 	})
 
 	// print invalid lines
-	println("\n--Invalid lines:--")
-	for _, line := range invalidLinesList {
-		println(line)
+	fmt.Printf("\n--Invalid lines:--\n")
+	for idx, line := range invalidLinesList {
+		fmt.Printf("%d. %s\n", idx, line)
 	}
 
-	// save file
-	f, err := os.Create(distFilePath)
-	if err != nil {
-		log.Fatalf("create file error: %v", err)
-		return
-	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			log.Fatalf("close file error: %v", err)
-		}
-	}(f)
-	fmt.Printf("Successfully convert %s\n", distFilePath)
+	utils.CreateFileWithContent(distFilePath, dictObj)
 }
