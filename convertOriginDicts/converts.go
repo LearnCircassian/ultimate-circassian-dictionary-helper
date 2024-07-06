@@ -84,14 +84,13 @@ func convert1() {
 		spelling = strings.Trim(spelling, "\"")
 		spelling = strings.Trim(spelling, " ")
 		spelling = strings.Trim(spelling, "\t")
-		spelling = strings.ReplaceAll(spelling, "I", "1")
 		spelling = convertIToCirStick(spelling)
 
 		// second part
 		var obj = split[1]
 		obj = strings.Trim(obj, " ")
 		obj = strings.Trim(obj, "\t")
-		obj = strings.Trim(obj, "\"")
+		obj = strings.Trim(obj, ",")
 		obj = strings.ReplaceAll(obj, "\\\"", "\u0022")
 		obj = convertIToCirStick(obj)
 

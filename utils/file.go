@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"ultimate-circassian-dictionary-helper/wordObject"
 )
 
@@ -49,13 +50,17 @@ func CreateFileWithContent(filePath string, dict *wordObject.DictionaryObject) {
 		}
 	}(f)
 
-	dictToJson, err := json.MarshalIndent(dict, "", "\t")
+	dictToJsonBytes, err := json.MarshalIndent(dict, "", "\t")
 	if err != nil {
 		log.Fatalf("json marshal error: %v", err)
 		return
 	}
 
-	_, err = f.Write(dictToJson)
+	dictToJsonStr := string(dictToJsonBytes)
+	dictToJsonStr = strings.ReplaceAll(dictToJsonStr, "\\u003c", "<")
+	dictToJsonStr = strings.ReplaceAll(dictToJsonStr, "\\u003e", ">")
+	dictToJsonStr = strings.ReplaceAll(dictToJsonStr, "\\\"", "'")
+	_, err = f.WriteString(dictToJsonStr)
 	if err != nil {
 		log.Fatalf("write file error: %v", err)
 		return
