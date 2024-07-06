@@ -85,6 +85,7 @@ func convert1() {
 		spelling = strings.Trim(spelling, " ")
 		spelling = strings.Trim(spelling, "\t")
 		spelling = strings.ReplaceAll(spelling, "I", "1")
+		spelling = convertIToCirStick(spelling)
 
 		// second part
 		var obj = split[1]
@@ -92,6 +93,7 @@ func convert1() {
 		obj = strings.Trim(obj, "\t")
 		obj = strings.Trim(obj, "\"")
 		obj = strings.ReplaceAll(obj, "\\\"", "\u0022")
+		obj = convertIToCirStick(obj)
 
 		// Check if word exist, if it does, add definition, otherwise create new word
 		if _, ok := dictObj.Words[spelling]; !ok {
@@ -142,10 +144,12 @@ func convert22() {
 		spelling = strings.Trim(spelling, "\"")
 		spelling = strings.Trim(spelling, " ")
 		spelling = strings.Trim(spelling, "\t")
+		spelling = convertIToCirStick(spelling)
 
 		// second part
 		var obj = split[1]
 		obj = strings.TrimSuffix(obj, ",")
+		obj = convertIToCirStick(obj)
 		var objMap JontyWord
 		if err := json.Unmarshal([]byte(obj), &objMap); err != nil {
 			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
@@ -171,4 +175,48 @@ func convert22() {
 	}
 
 	utils.CreateFileWithContent(distFilePath, dictObj)
+}
+
+func convertIToCirStick(str string) string {
+	str = strings.ReplaceAll(str, "ӏ", "1")
+	// small i
+	str = strings.ReplaceAll(str, "iа", "1а")
+	str = strings.ReplaceAll(str, "iо", "1о")
+	str = strings.ReplaceAll(str, "iе", "1е")
+	str = strings.ReplaceAll(str, "iя", "1я")
+	str = strings.ReplaceAll(str, "iы", "1ы")
+	str = strings.ReplaceAll(str, "iэ", "1э")
+	str = strings.ReplaceAll(str, "iи", "1и")
+	str = strings.ReplaceAll(str, "iу", "1у")
+	str = strings.ReplaceAll(str, "кi", "к1")
+	str = strings.ReplaceAll(str, "шi", "ш1")
+	str = strings.ReplaceAll(str, "пi", "п1")
+	str = strings.ReplaceAll(str, "цi", "ц1")
+	str = strings.ReplaceAll(str, "сi", "с1")
+	str = strings.ReplaceAll(str, "чi", "ч1")
+	str = strings.ReplaceAll(str, "тi", "т1")
+	str = strings.ReplaceAll(str, "лi", "л1")
+	str = strings.ReplaceAll(str, "фi", "ф1")
+	str = strings.ReplaceAll(str, "щi", "щ1")
+
+	// upper I
+	str = strings.ReplaceAll(str, "Iа", "1а")
+	str = strings.ReplaceAll(str, "Iо", "1о")
+	str = strings.ReplaceAll(str, "Iе", "1е")
+	str = strings.ReplaceAll(str, "Iя", "1я")
+	str = strings.ReplaceAll(str, "Iы", "1ы")
+	str = strings.ReplaceAll(str, "Iэ", "1э")
+	str = strings.ReplaceAll(str, "Iи", "1и")
+	str = strings.ReplaceAll(str, "Iу", "1у")
+	str = strings.ReplaceAll(str, "кI", "к1")
+	str = strings.ReplaceAll(str, "шI", "ш1")
+	str = strings.ReplaceAll(str, "пI", "п1")
+	str = strings.ReplaceAll(str, "цI", "ц1")
+	str = strings.ReplaceAll(str, "сI", "с1")
+	str = strings.ReplaceAll(str, "чI", "ч1")
+	str = strings.ReplaceAll(str, "тI", "т1")
+	str = strings.ReplaceAll(str, "лI", "л1")
+	str = strings.ReplaceAll(str, "фI", "ф1")
+	str = strings.ReplaceAll(str, "щI", "щ1")
+	return str
 }
