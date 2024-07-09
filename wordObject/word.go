@@ -6,8 +6,8 @@ type Cognate struct {
 }
 
 type Synonym struct {
-	Spelling string `json:"spelling"`
-	Meaning  string `json:"meaning"`
+	Spelling    string `json:"spelling"`
+	Explanation string `json:"explanation"`
 }
 
 type Antonym struct {
@@ -20,19 +20,20 @@ type Example struct {
 	Translation string `json:"translation"`
 }
 
-type AllDefinitions struct {
+type Definition struct {
 	Meaning             string    `json:"meaning"`
 	MeaningWithExamples string    `json:"fullMeaning"`
 	Examples            []Example `json:"examples"`
 }
 
 type WordObject struct {
-	Spelling       string           `json:"spelling"`
-	Cognates       []Cognate        `json:"cognates"`
-	Redirect       string           `json:"redirect"`
-	AllDefinitions []AllDefinitions `json:"allDefinitions"`
-	Derivation     string           `json:"derivation"`
-	Type           string           `json:"type"`
+	Spelling    string       `json:"spelling"`
+	Cognates    []Cognate    `json:"cognates"`
+	Redirect    string       `json:"redirect"`
+	Definitions []Definition `json:"definitions"`
+	Derivation  string       `json:"derivation"`
+	Type        string       `json:"type"`
+	Synonyms    []Synonym    `json:"synonyms"`
 }
 
 type DictionaryObject struct {
@@ -41,26 +42,28 @@ type DictionaryObject struct {
 	Words    map[string]*WordObject `json:"words"`
 	FromLang string                 `json:"fromLang"`
 	ToLang   string                 `json:"toLang"`
+	Format   string                 `json:"format"`
 }
 
-func NewDictionaryObject(title string, id int, fromLang string, toLang string) *DictionaryObject {
+func NewDictionaryObject(title string, id int, fromLang string, toLang string, format string) *DictionaryObject {
 	return &DictionaryObject{
 		Title:    title,
 		Id:       id,
 		Words:    make(map[string]*WordObject),
 		FromLang: fromLang,
 		ToLang:   toLang,
+		Format:   format,
 	}
 }
 
 func NewWordObject(spelling string, wordType string) *WordObject {
 	return &WordObject{
-		Spelling:       spelling,
-		Cognates:       make([]Cognate, 0),
-		Redirect:       "",
-		AllDefinitions: make([]AllDefinitions, 0),
-		Derivation:     "",
-		Type:           wordType,
+		Spelling:    spelling,
+		Cognates:    make([]Cognate, 0),
+		Redirect:    "",
+		Definitions: make([]Definition, 0),
+		Derivation:  "",
+		Type:        wordType,
 	}
 }
 
@@ -71,8 +74,15 @@ func (w *WordObject) AddCognate(language, spelling string) {
 	})
 }
 
+func (w *WordObject) AddSynonym(spelling, explanation string) {
+	w.Synonyms = append(w.Synonyms, Synonym{
+		Spelling:    spelling,
+		Explanation: explanation,
+	})
+}
+
 func (w *WordObject) AddOneSimpleDefinition(meaningWithExamples string) {
-	w.AllDefinitions = append(w.AllDefinitions, AllDefinitions{
+	w.Definitions = append(w.Definitions, Definition{
 		Meaning:             "",
 		MeaningWithExamples: meaningWithExamples,
 		Examples:            make([]Example, 0),
@@ -80,7 +90,7 @@ func (w *WordObject) AddOneSimpleDefinition(meaningWithExamples string) {
 }
 
 func (w *WordObject) AddOneAdvancedDefinition(meaning string, examples []Example) {
-	w.AllDefinitions = append(w.AllDefinitions, AllDefinitions{
+	w.Definitions = append(w.Definitions, Definition{
 		Meaning:             meaning,
 		MeaningWithExamples: "",
 		Examples:            examples,
@@ -95,7 +105,7 @@ func (w *WordObject) AddDerivation(derivation string) {
 	w.Derivation = derivation
 }
 
-func (ad AllDefinitions) AddExample(sentence, translation string) {
+func (ad Definition) AddExample(sentence, translation string) {
 	ad.Examples = append(ad.Examples, Example{
 		Sentence:    sentence,
 		Translation: translation,

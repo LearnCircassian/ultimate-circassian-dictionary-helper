@@ -3,6 +3,7 @@ package converts
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 	"ultimate-circassian-dictionary-helper/utils"
 	"ultimate-circassian-dictionary-helper/wordObject"
@@ -45,24 +46,18 @@ import (
 29, "Jonty Turkish-Kabardian Dictionary",
 */
 
-type JontyWord struct {
-	Type        string `json:"type"`
-	Definitions []struct {
-		Meaning string `json:"meaning"`
-	} `json:"definitions"`
-}
-
 func CallAllConverts() {
 	// convert0()
 	// convert1()
 	//convert2()
-	convert3()
+	//convert3()
+	convert4()
 	// convert22()
 }
 
 // convert0() Адыгабзэм изэхэф гущыIалъ - Ady-Ady_AIG.json
 func convert0() {
-	dictObj := wordObject.NewDictionaryObject("Адыгабзэм изэхэф гущы1алъ", 0, "Ady", "Ru")
+	dictObj := wordObject.NewDictionaryObject("Адыгабзэм изэхэф гущы1алъ", 0, "Ady", "Ru", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Ady_AIG.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Ady_AIG.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -121,7 +116,7 @@ func convert0() {
 
 // convert1() Адыгэбзэ псалъалъэ - Ady-Ady_AP.json
 func convert1() {
-	dictObj := wordObject.NewDictionaryObject("Адыгэбзэ псалъалъэ", 1, "Kbd", "Ru")
+	dictObj := wordObject.NewDictionaryObject("Адыгэбзэ псалъалъэ", 1, "Kbd", "Ru", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Ady_AP.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Ady_AP.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -181,7 +176,7 @@ func convert1() {
 
 // convert2() Адыгэ-араб гущыIалъ - Ady-Ara.json
 func convert2() {
-	dictObj := wordObject.NewDictionaryObject("Адыгэ-араб гущыIалъ", 2, "Ady", "Ar")
+	dictObj := wordObject.NewDictionaryObject("Адыгэ-араб гущыIалъ", 2, "Ady", "Ar", "JSON")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Ara.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Ara.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -241,7 +236,7 @@ func convert2() {
 
 // convert3() Адыгэбзэ-инджылыбзэ гущы1алъэ - Ady-En.json
 func convert3() {
-	dictObj := wordObject.NewDictionaryObject("Адыгэбзэ-инджылыбзэ гущы1алъэ", 3, "Ady", "En")
+	dictObj := wordObject.NewDictionaryObject("Адыгэбзэ-инджылыбзэ гущы1алъэ", 3, "Ady", "En", "JSON")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-En.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-En.json", dictObj.Id)
 
@@ -253,6 +248,8 @@ func convert3() {
 	}
 
 	fileToStr := utils.ReadEntireFile(srcFilePath)
+	fileToStr = strings.ReplaceAll(fileToStr, "\\\"", "'")
+	fileToStr = convertIToCirStick(fileToStr)
 	fileStrToBytes := []byte(fileToStr)
 	if err := json.Unmarshal(fileStrToBytes, &originalDict); err != nil {
 		fmt.Printf("Invalid json file: %s\n", srcFilePath)
@@ -267,6 +264,72 @@ func convert3() {
 		}
 		for _, definition := range value.Definitions {
 			dictObj.Words[key].AddOneAdvancedDefinition(definition.Meaning, []wordObject.Example{})
+		}
+		fmt.Printf("Index %d key %s\n", idx, key)
+		idx++
+	}
+
+	utils.CreateFileWithContent(distFilePath, dictObj)
+}
+
+// convert4() Адэм Шъэджашъ и адыгэбзэ-инджылыбзэ гущы1алъэ - Ady-En_Adam.json
+func convert4() {
+	dictObj := wordObject.NewDictionaryObject("Адыгэбзэ-инджылыбзэ гущы1алъэ", 4, "Ady", "En", "JSON")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-En_Adam.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-En_Adam.json", dictObj.Id)
+
+	// covert file to json
+	var originalDict map[string]struct {
+		Word     string `json:"word"`
+		Type     string `json:"type"`
+		Synonyms []struct {
+			Word string `json:"word"`
+		} `json:"synonyms"`
+		Shapsug     string `json:"shapsug"`
+		Kabardian   string `json:"kabardian"`
+		Definitions []struct {
+			Meaning  string               `json:"meaning"`
+			Examples []wordObject.Example `json:"examples"`
+		} `json:"definitions"`
+	}
+
+	fileToStr := utils.ReadEntireFile(srcFilePath)
+	fileToStr = convertIToCirStick(fileToStr)
+	fileStrToBytes := []byte(fileToStr)
+	if err := json.Unmarshal(fileStrToBytes, &originalDict); err != nil {
+		fmt.Printf("Invalid json file: %s\n. Reason: %s", srcFilePath, err.Error())
+		return
+	}
+
+	// Check if word exist, if it does, add definition, otherwise create new word
+	idx := 0
+	for key, value := range originalDict {
+		if _, ok := dictObj.Words[key]; !ok {
+			dictObj.Words[key] = wordObject.NewWordObject(key, "")
+		}
+		for _, definition := range value.Definitions {
+			if strings.Contains(definition.Meaning, "alternative form of") {
+				redirectWord, ok := extractRedirectWord(definition.Meaning)
+				if ok {
+					dictObj.Words[key].Redirect = redirectWord
+				}
+			} else {
+				dictObj.Words[key].AddOneAdvancedDefinition(definition.Meaning, definition.Examples)
+			}
+		}
+		if value.Shapsug != "" {
+			dictObj.Words[key].AddCognate("Shapsug", value.Shapsug)
+		}
+		if value.Kabardian != "" {
+			dictObj.Words[key].AddCognate("Kabardian", value.Kabardian)
+		}
+		if value.Synonyms != nil && len(value.Synonyms) > 0 {
+			for _, synonym := range value.Synonyms {
+				dictObj.Words[key].AddSynonym(synonym.Word, "")
+			}
+		}
+		if value.Type != "" {
+			dictObj.Words[key].Type = value.Type
 		}
 		fmt.Printf("Index %d key %s\n", idx, key)
 		idx++
@@ -312,7 +375,12 @@ func convert22() {
 		var obj = split[1]
 		obj = strings.TrimSuffix(obj, ",")
 		obj = convertIToCirStick(obj)
-		var objMap JontyWord
+		var objMap struct {
+			Type        string `json:"type"`
+			Definitions []struct {
+				Meaning string `json:"meaning"`
+			} `json:"definitions"`
+		}
 		if err := json.Unmarshal([]byte(obj), &objMap); err != nil {
 			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
 			invalidLinesList = append(invalidLinesList, errMsg)
@@ -381,4 +449,23 @@ func convertIToCirStick(str string) string {
 	str = strings.ReplaceAll(str, "фI", "ф1")
 	str = strings.ReplaceAll(str, "щI", "щ1")
 	return str
+}
+
+// extractRedirectWord checks if a string matches the pattern "alternative form of \"кiэхьан\""
+// and extracts the text between the escaped double quotes.
+func extractRedirectWord(input string) (string, bool) {
+	// Define the regular expression pattern
+	pattern := `alternative form of "(.*?)"`
+
+	// Compile the regular expression
+	re := regexp.MustCompile(pattern)
+
+	// Find the substring that matches the pattern
+	match := re.FindStringSubmatch(input)
+
+	// Check if there was a match and extract the text between the quotes
+	if len(match) > 1 {
+		return match[1], true
+	}
+	return "", false
 }
