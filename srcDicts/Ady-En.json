@@ -1,6 +1,6 @@
 {
 	"1адэ": {"definitions":[{"meaning":"tong"}]},
-	"1ае": {"definitions":[{"meaning":"unsweetened"},{"meaning":"crooked"},{"meaning":"ugly creature"}]},
+	"1ае": {"definitions":[{"meaning":"not tasty"},{"meaning": "not delicious"},{"meaning":"crooked"},{"meaning":"ugly"}]},
 	"1аеу": {"definitions":[{"meaning":"bad"}]},
 	"1азэ": {"definitions":[{"meaning":"doctor"},{"meaning":"doctor"},{"meaning":"expert"}]},
 	"1алъ": {"definitions":[{"meaning":"mittens"}]},
@@ -3819,6 +3819,5 @@
 	"яхэнэрэ": {"definitions":[{"meaning":"sixth"}]},
 	"яшъибгъонэрэ": {"definitions":[{"meaning":"900th"}]},
 	"ящэнэрэ": {"definitions":[{"meaning":"third"}]},
-	"ящэнэрэ (маф)": {"definitions":[{"meaning":"third (day)"}]},
-	"﻿хьаджыгъ": {"definitions":[{"meaning":"flour"}]}
+	"ящэнэрэ (маф)": {"definitions":[{"meaning":"third (day)"}]}
 }

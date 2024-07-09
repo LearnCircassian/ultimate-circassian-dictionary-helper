@@ -10,6 +10,40 @@ import (
 	"ultimate-circassian-dictionary-helper/wordObject"
 )
 
+func ReadEntireFile(filePath string) string {
+	// Open the file
+	f, err := os.Open(filePath)
+	if err != nil {
+		log.Fatalf("open file error: %v", err)
+		return ""
+	}
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			log.Fatalf("close file error: %v", err)
+		}
+	}(f)
+
+	// Create a scanner to read the file
+	sc := bufio.NewScanner(f)
+	// Initialize a strings.Builder for efficient string concatenation
+	var builder strings.Builder
+
+	// Scan the file line by line
+	for sc.Scan() {
+		builder.WriteString(sc.Text())
+		builder.WriteString("\n")
+	}
+
+	// Check for scanning errors
+	if err := sc.Err(); err != nil {
+		log.Fatalf("scan file error: %v", err)
+		return ""
+	}
+
+	return builder.String()
+}
+
 func ReadFileLineByLine(filePath string, callback func(string, int)) {
 	f, err := os.OpenFile(filePath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
