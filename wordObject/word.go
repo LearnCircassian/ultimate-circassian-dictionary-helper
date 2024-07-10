@@ -64,6 +64,7 @@ func NewWordObject(spelling string, wordType string) *WordObject {
 		Definitions: make([]Definition, 0),
 		Derivation:  "",
 		Type:        wordType,
+		Synonyms:    make([]Synonym, 0),
 	}
 }
 

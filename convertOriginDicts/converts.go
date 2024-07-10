@@ -47,12 +47,15 @@ import (
 */
 
 func CallAllConverts() {
-	// convert0()
-	// convert1()
+	//convert0()
+	//convert1()
 	//convert2()
 	//convert3()
-	convert4()
-	// convert22()
+	//convert4()
+	//convert5()
+	//convert6()
+	convert7()
+	//convert22()
 }
 
 // convert0() Адыгабзэм изэхэф гущыIалъ - Ady-Ady_AIG.json
@@ -176,7 +179,7 @@ func convert1() {
 
 // convert2() Адыгэ-араб гущыIалъ - Ady-Ara.json
 func convert2() {
-	dictObj := wordObject.NewDictionaryObject("Адыгэ-араб гущыIалъ", 2, "Ady", "Ar", "JSON")
+	dictObj := wordObject.NewDictionaryObject("Адыгэ-араб гущыIалъ", 2, "Ady", "Ar", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Ara.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Ara.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -338,9 +341,189 @@ func convert4() {
 	utils.CreateFileWithContent(distFilePath, dictObj)
 }
 
+// convert5() Къардэн - Ady-Rus_Qarden.json
+func convert5() {
+	dictObj := wordObject.NewDictionaryObject("Къардэн", 5, "Ady", "Ru", "HTML")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Rus_Qarden.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Rus_Qarden.json", dictObj.Id)
+	invalidLinesList := make([]string, 0)
+
+	utils.ReadFileLineByLine(srcFilePath, func(line string, idx int) {
+		var errMsg string
+		// split
+		line = strings.Trim(line, " ")
+		line = strings.Trim(line, "\t")
+		split := strings.SplitN(line, ":", 2)
+		if len(split) < 2 {
+			errMsg = fmt.Sprintf("Invalid line (0) %d: %s", idx, line)
+			invalidLinesList = append(invalidLinesList, errMsg)
+			fmt.Printf("%s\n", errMsg)
+			return
+		}
+
+		// first part
+		var spelling = split[0]
+		if strings.Count(spelling, "\"") != 2 {
+			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
+			invalidLinesList = append(invalidLinesList, errMsg)
+			fmt.Printf("%s\n", errMsg)
+			return
+		}
+		spelling = strings.Trim(spelling, "\"")
+		spelling = strings.Trim(spelling, " ")
+		spelling = strings.Trim(spelling, "\t")
+		spelling = strings.ToLower(spelling)
+		spelling = convertIToCirStick(spelling)
+
+		// second part
+		var obj = split[1]
+		obj = strings.Trim(obj, " ")
+		obj = strings.Trim(obj, "\t")
+		obj = strings.Trim(obj, ",")
+		obj = strings.Trim(obj, "\"")
+		obj = strings.ReplaceAll(obj, "\\\"", "\u0022")
+		obj = convertIToCirStick(obj)
+
+		// Check if word exist, if it does, add definition, otherwise create new word
+		if _, ok := dictObj.Words[spelling]; !ok {
+			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
+		}
+		dictObj.Words[spelling].AddOneSimpleDefinition(obj)
+		fmt.Printf("line %d: %s\n", idx, line)
+	})
+
+	// print invalid lines
+	fmt.Printf("\n--Invalid lines in %s:--\n", srcFilePath)
+	for idx, line := range invalidLinesList {
+		fmt.Printf("%d. %s\n", idx, line)
+	}
+
+	utils.CreateFileWithContent(distFilePath, dictObj)
+}
+
+// convert6() Ady-Rus_Sherdjes.json
+func convert6() {
+	dictObj := wordObject.NewDictionaryObject("Яхуэмыфащэу лъэныкъуэ едгъэза псалъэхэр", 6, "Kbd", "Ru", "HTML")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Rus_Sherdjes.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Rus_Sherdjes.json", dictObj.Id)
+	invalidLinesList := make([]string, 0)
+
+	utils.ReadFileLineByLine(srcFilePath, func(line string, idx int) {
+		var errMsg string
+		// split
+		line = strings.Trim(line, " ")
+		line = strings.Trim(line, "\t")
+		split := strings.SplitN(line, ":", 2)
+		if len(split) < 2 {
+			errMsg = fmt.Sprintf("Invalid line (0) %d: %s", idx, line)
+			invalidLinesList = append(invalidLinesList, errMsg)
+			fmt.Printf("%s\n", errMsg)
+			return
+		}
+
+		// first part
+		var spelling = split[0]
+		if strings.Count(spelling, "\"") != 2 {
+			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
+			invalidLinesList = append(invalidLinesList, errMsg)
+			fmt.Printf("%s\n", errMsg)
+			return
+		}
+		spelling = strings.Trim(spelling, "\"")
+		spelling = strings.Trim(spelling, " ")
+		spelling = strings.Trim(spelling, "\t")
+		spelling = strings.ToLower(spelling)
+		spelling = convertIToCirStick(spelling)
+
+		// second part
+		var obj = split[1]
+		obj = strings.Trim(obj, " ")
+		obj = strings.Trim(obj, "\t")
+		obj = strings.Trim(obj, ",")
+		obj = strings.Trim(obj, "\"")
+		obj = strings.ReplaceAll(obj, "\\\"", "\u0022")
+		obj = convertIToCirStick(obj)
+
+		// Check if word exist, if it does, add definition, otherwise create new word
+		if _, ok := dictObj.Words[spelling]; !ok {
+			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
+		}
+		dictObj.Words[spelling].AddOneSimpleDefinition(obj)
+		fmt.Printf("line %d: %s\n", idx, line)
+	})
+
+	// print invalid lines
+	fmt.Printf("\n--Invalid lines in %s:--\n", srcFilePath)
+	for idx, line := range invalidLinesList {
+		fmt.Printf("%d. %s\n", idx, line)
+	}
+
+	utils.CreateFileWithContent(distFilePath, dictObj)
+}
+
+// convert7() Ady-Rus_Tharkaho.json
+func convert7() {
+	dictObj := wordObject.NewDictionaryObject("Тхьаркъуахъо", 7, "Ady", "Ru", "HTML")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Rus_Tharkaho.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Rus_Tharkaho.json", dictObj.Id)
+	invalidLinesList := make([]string, 0)
+
+	utils.ReadFileLineByLine(srcFilePath, func(line string, idx int) {
+		var errMsg string
+		// split
+		line = strings.Trim(line, " ")
+		line = strings.Trim(line, "\t")
+		split := strings.SplitN(line, ":", 2)
+		if len(split) < 2 {
+			errMsg = fmt.Sprintf("Invalid line (0) %d: %s", idx, line)
+			invalidLinesList = append(invalidLinesList, errMsg)
+			fmt.Printf("%s\n", errMsg)
+			return
+		}
+
+		// first part
+		var spelling = split[0]
+		if strings.Count(spelling, "\"") != 2 {
+			errMsg = fmt.Sprintf("Invalid line %d: %s", idx, line)
+			invalidLinesList = append(invalidLinesList, errMsg)
+			fmt.Printf("%s\n", errMsg)
+			return
+		}
+		spelling = strings.Trim(spelling, "\"")
+		spelling = strings.Trim(spelling, " ")
+		spelling = strings.Trim(spelling, "\t")
+		spelling = strings.ToLower(spelling)
+		spelling = convertIToCirStick(spelling)
+
+		// second part
+		var obj = split[1]
+		obj = strings.Trim(obj, " ")
+		obj = strings.Trim(obj, "\t")
+		obj = strings.Trim(obj, ",")
+		obj = strings.Trim(obj, "\"")
+		obj = strings.ReplaceAll(obj, "\\\"", "\u0022")
+		obj = convertIToCirStick(obj)
+
+		// Check if word exist, if it does, add definition, otherwise create new word
+		if _, ok := dictObj.Words[spelling]; !ok {
+			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
+		}
+		dictObj.Words[spelling].AddOneSimpleDefinition(obj)
+		fmt.Printf("line %d: %s\n", idx, line)
+	})
+
+	// print invalid lines
+	fmt.Printf("\n--Invalid lines in %s:--\n", srcFilePath)
+	for idx, line := range invalidLinesList {
+		fmt.Printf("%d. %s\n", idx, line)
+	}
+
+	utils.CreateFileWithContent(distFilePath, dictObj)
+}
+
 // convert22() Kbd-En-Jonty.json
 func convert22() {
-	dictObj := wordObject.NewDictionaryObject("Jonty Kabardian-English Dictionary", 22, "Kbd", "En")
+	dictObj := wordObject.NewDictionaryObject("Jonty Kabardian-English Dictionary", 22, "Kbd", "En", "JSON")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-En-Jonty.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Kbd-En-Jonty.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
