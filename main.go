@@ -1,5 +1,7 @@
 package main
 
+import converts "ultimate-circassian-dictionary-helper/convertOriginDicts"
+
 func main() {
-	println("Hello, World!")
+	converts.CallAllConverts()
 }
