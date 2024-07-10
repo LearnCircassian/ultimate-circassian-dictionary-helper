@@ -61,7 +61,9 @@ func CallAllConverts() {
 	//convert11()
 	//convert12()
 	//convert13()
-	convert14()
+	//convert14()
+	//convert15()
+	//convert16()
 	//convert22()
 }
 
@@ -829,6 +831,94 @@ func convert14() {
 				dictObj.Words[key].AddOneAdvancedDefinition(definition.Meaning, []wordObject.Example{})
 			} else {
 				dictObj.Words[key].AddOneAdvancedDefinition(definition.Meaning, *definition.Examples)
+			}
+		}
+		fmt.Printf("Index %d key %s\n", idx, key)
+		idx++
+	}
+
+	utils.CreateFileWithContent(distFilePath, dictObj)
+}
+
+// convert15() Kbd-En-Jonty.json
+func convert15() {
+	dictObj := wordObject.NewDictionaryObject("Jonty Yamisha's Kabardian to English dictionary", 15, "Kbd", "En", "JSON")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-En-Jonty.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Kbd-En-Jonty.json", dictObj.Id)
+
+	// {"type":"adjective","definitions":[{"meaning":"delicate"},{"meaning":"meek"},{"meaning":"courteous"}]},
+	// covert file to json
+	var originalDict map[string]struct {
+		Type        string `json:"type"`
+		Definitions []struct {
+			Meaning string `json:"meaning"`
+		} `json:"definitions"`
+	}
+
+	fileToStr := utils.ReadEntireFile(srcFilePath)
+	fileToStr = strings.ReplaceAll(fileToStr, "\\\"", "'")
+	fileToStr = convertIToCirStick(fileToStr)
+	fileStrToBytes := []byte(fileToStr)
+	if err := json.Unmarshal(fileStrToBytes, &originalDict); err != nil {
+		fmt.Printf("Invalid json file: %s\n", srcFilePath)
+		fmt.Printf("Reason: %s\n", err.Error())
+		return
+	}
+
+	// Check if word exist, if it does, add definition, otherwise create new word
+	idx := 0
+	for key, value := range originalDict {
+		if _, ok := dictObj.Words[key]; !ok {
+			dictObj.Words[key] = wordObject.NewWordObject(key, "")
+			dictObj.Words[key].Type = value.Type
+		}
+		for _, definition := range value.Definitions {
+			dictObj.Words[key].AddOneAdvancedDefinition(definition.Meaning, []wordObject.Example{})
+		}
+		fmt.Printf("Index %d key %s\n", idx, key)
+		idx++
+	}
+
+	utils.CreateFileWithContent(distFilePath, dictObj)
+}
+
+// convert16() Kbd-En-Ziwar.json
+func convert16() {
+	dictObj := wordObject.NewDictionaryObject("Ziwar Gish's Kabardian to English dictionary", 16, "Kbd", "En", "JSON")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-En-Ziwar.json"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Kbd-En-Ziwar.json", dictObj.Id)
+
+	// {"links":[{"clarity":"bad","word":"awful"},{"word":"bad"},{"word":"dashing"},{"word":"dashing"},{"word":"nasty"}]},
+	// covert file to json
+	var originalDict map[string]struct {
+		Links []struct {
+			Word    string  `json:"word"`
+			Clarity *string `json:"clarity"`
+		} `json:"links"`
+	}
+
+	fileToStr := utils.ReadEntireFile(srcFilePath)
+	fileToStr = strings.ReplaceAll(fileToStr, "\\\"", "'")
+	fileToStr = convertIToCirStick(fileToStr)
+	fileStrToBytes := []byte(fileToStr)
+	if err := json.Unmarshal(fileStrToBytes, &originalDict); err != nil {
+		fmt.Printf("Invalid json file: %s\n", srcFilePath)
+		fmt.Printf("Reason: %s\n", err.Error())
+		return
+	}
+
+	// Check if word exist, if it does, add definition, otherwise create new word
+	idx := 0
+	for key, value := range originalDict {
+		if _, ok := dictObj.Words[key]; !ok {
+			dictObj.Words[key] = wordObject.NewWordObject(key, "")
+		}
+		for _, definition := range value.Links {
+			if definition.Clarity == nil {
+				dictObj.Words[key].AddOneAdvancedDefinition(definition.Word, []wordObject.Example{})
+			} else {
+				meaningWithClarity := fmt.Sprintf("%s (%s)", definition.Word, *definition.Clarity)
+				dictObj.Words[key].AddOneAdvancedDefinition(meaningWithClarity, []wordObject.Example{})
 			}
 		}
 		fmt.Printf("Index %d key %s\n", idx, key)
