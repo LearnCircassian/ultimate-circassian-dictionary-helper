@@ -108,7 +108,7 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
             isFromEn, isToEn, 
             isFromAdy, isToAdy, 
             isFromAr, isToAr, 
-            isFromTu, isToTu, 
+            isFromTr, isToTr, 
             isFromRu, isToRu, 
             isFromHe, isToHe
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, tableName),
@@ -151,7 +151,7 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
 		isFromEn, isToEn := false, false
 		isFromAdy, isToAdy := false, false
 		isFromAr, isToAr := false, false
-		isFromTu, isToTu := false, false
+		isFromTr, isToTr := false, false
 		isFromRu, isToRu := false, false
 		isFromHe, isToHe := false, false
 
@@ -167,7 +167,7 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
 			case "Ar":
 				isFromAr = true
 			case "Tr":
-				isFromTu = true
+				isFromTr = true
 			case "Ru":
 				isFromRu = true
 			case "He":
@@ -186,7 +186,7 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
 			case "Ar":
 				isToAr = true
 			case "Tr":
-				isToTu = true
+				isToTr = true
 			case "Ru":
 				isToRu = true
 			case "He":
@@ -204,7 +204,7 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
 			isFromEn, isToEn,
 			isFromAdy, isToAdy,
 			isFromAr, isToAr,
-			isFromTu, isToTu,
+			isFromTr, isToTr,
 			isFromRu, isToRu,
 			isFromHe, isToHe,
 		)
