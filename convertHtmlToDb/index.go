@@ -1,13 +1,11 @@
 package convertHtmlToDb
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	_ "modernc.org/sqlite"
-	"strconv"
 	"strings"
 	"ultimate-circassian-dictionary-helper/utils"
 	"ultimate-circassian-dictionary-helper/wordObject"
@@ -30,119 +28,89 @@ type DictCounter struct {
 
 type WordToDiddMap map[string][]*DefinitionsInDifferentDictionaries
 
-func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
-	fileName := "wordToDefsInDiffDicts.db"
-	var db *sql.DB
+var db *sql.DB // Global variable for SQLite database connection
+
+// InitializeDB initializes the SQLite database connection
+func InitializeDB(fileName string) error {
 	var err error
-
-	// Check if the file exists and delete it if it does
-	if utils.DoesFileExist(fileName) {
-		err = utils.DeleteFile(fileName)
-		if err != nil {
-			return err
-		}
-	}
-
-	// Open the SQLite database
 	db, err = sql.Open("sqlite", fileName)
 	if err != nil {
 		return err
 	}
-	defer func(db *sql.DB) {
+	return nil
+}
+
+// CloseDB closes the SQLite database connection
+func CloseDB() error {
+	if db != nil {
 		err := db.Close()
 		if err != nil {
-			fmt.Println("Error closing database connection:", err)
-			return
+			return err
 		}
-	}(db)
+	}
+	return nil
+}
+
+// ToSqliteDb inserts data into SQLite database tables
+func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
+	// Ensure db is initialized
+	if db == nil {
+		return fmt.Errorf("database connection is nil, call InitializeDB with the database filename first")
+	}
 
 	// Adjust the CREATE TABLE statement to set a limit based on the longest spelling
 	// Call determineMaxLength to get the longest word length
 	maxLength, longestWord := determineMaxLength(wtdm)
 	fmt.Printf("Longest word: %s (%d characters)\n", longestWord, maxLength)
 
-	// Create the Latin words table
-	_, err = db.ExecContext(
+	// Create the table with the original column names and additional boolean columns
+	_, err := db.ExecContext(
 		context.Background(),
-		`CREATE TABLE IF NOT EXISTS latinWordsTable (
-			key VARCHAR(`+strconv.Itoa(maxLength)+`) PRIMARY KEY,
-			value TEXT,
-			isFromKbd BOOLEAN,
-			isToKbd BOOLEAN,
-			isFromEn BOOLEAN,
-			isToEn BOOLEAN,
-			isFromAdy BOOLEAN,
-			isToAdy BOOLEAN,
-			isFromAr BOOLEAN,
-			isToAr BOOLEAN,
-			isFromTu BOOLEAN,
-			isToTu BOOLEAN,
-			isFromRu BOOLEAN,
-			isToRu BOOLEAN,
-			isFromHe BOOLEAN,
-			isToHe BOOLEAN
-		);`,
+		fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
+            key VARCHAR(%d) PRIMARY KEY,  -- Set VARCHAR length based on maxLength
+            value TEXT,
+            isFromKbd BOOLEAN,
+            isToKbd BOOLEAN,
+            isFromEn BOOLEAN,
+            isToEn BOOLEAN,
+            isFromAdy BOOLEAN,
+            isToAdy BOOLEAN,
+            isFromAr BOOLEAN,
+            isToAr BOOLEAN,
+            isFromTu BOOLEAN,
+            isToTu BOOLEAN,
+            isFromRu BOOLEAN,
+            isToRu BOOLEAN,
+            isFromHe BOOLEAN,
+            isToHe BOOLEAN
+        );`, tableName, maxLength),
 	)
 	if err != nil {
 		return err
 	}
 
-	// Create the Cyrillic words table
+	// Create index on key column for faster lookup
 	_, err = db.ExecContext(
 		context.Background(),
-		`CREATE TABLE IF NOT EXISTS cyrillicWordsTable (
-			key VARCHAR(`+strconv.Itoa(maxLength)+`) PRIMARY KEY,
-			value TEXT,
-			isFromKbd BOOLEAN,
-			isToKbd BOOLEAN,
-			isFromEn BOOLEAN,
-			isToEn BOOLEAN,
-			isFromAdy BOOLEAN,
-			isToAdy BOOLEAN,
-			isFromAr BOOLEAN,
-			isToAr BOOLEAN,
-			isFromTu BOOLEAN,
-			isToTu BOOLEAN,
-			isFromRu BOOLEAN,
-			isToRu BOOLEAN,
-			isFromHe BOOLEAN,
-			isToHe BOOLEAN
-		);`,
+		fmt.Sprintf(`CREATE INDEX IF NOT EXISTS idx_%s_key ON %s (key);`, tableName, tableName),
 	)
 	if err != nil {
 		return err
 	}
 
-	// Create indexes on key columns for faster lookup
-	_, err = db.ExecContext(
+	// Prepare the insert statement
+	stmt, err := db.PrepareContext(
 		context.Background(),
-		`CREATE INDEX IF NOT EXISTS idx_latinWordsTable_key ON latinWordsTable (key);`,
-	)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.ExecContext(
-		context.Background(),
-		`CREATE INDEX IF NOT EXISTS idx_cyrillicWordsTable_key ON cyrillicWordsTable (key);`,
-	)
-	if err != nil {
-		return err
-	}
-
-	// Prepare the insert statements for both tables
-	stmtLatin, err := db.PrepareContext(
-		context.Background(),
-		`INSERT INTO latinWordsTable (
-			key, value, 
-			isFromKbd, isToKbd, 
-			isFromEn, isToEn, 
-			isFromAdy, isToAdy, 
-			isFromAr, isToAr, 
-			isFromTu, isToTu, 
-			isFromRu, isToRu, 
-			isFromHe, isToHe
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		fmt.Sprintf(`INSERT INTO %s (
+            key, value, 
+            isFromKbd, isToKbd, 
+            isFromEn, isToEn, 
+            isFromAdy, isToAdy, 
+            isFromAr, isToAr, 
+            isFromTu, isToTu, 
+            isFromRu, isToRu, 
+            isFromHe, isToHe
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, tableName),
 	)
 	if err != nil {
 		return err
@@ -151,33 +119,8 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 		err := stmt.Close()
 		if err != nil {
 			fmt.Println("Error closing prepared statement:", err)
-			return
 		}
-	}(stmtLatin)
-
-	stmtCyrillic, err := db.PrepareContext(
-		context.Background(),
-		`INSERT INTO cyrillicWordsTable (
-			key, value, 
-			isFromKbd, isToKbd, 
-			isFromEn, isToEn, 
-			isFromAdy, isToAdy, 
-			isFromAr, isToAr, 
-			isFromTu, isToTu, 
-			isFromRu, isToRu, 
-			isFromHe, isToHe
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-	)
-	if err != nil {
-		return err
-	}
-	defer func(stmt *sql.Stmt) {
-		err := stmt.Close()
-		if err != nil {
-			fmt.Println("Error closing prepared statement:", err)
-			return
-		}
-	}(stmtCyrillic)
+	}(stmt)
 
 	// Begin a transaction for batch insertion
 	tx, err := db.Begin()
@@ -188,7 +131,6 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 		err := tx.Rollback()
 		if err != nil {
 			fmt.Println("Error rolling back transaction:", err)
-			return
 		}
 	}(tx) // Rollback the transaction if any error occurs
 
@@ -197,30 +139,66 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 
 	// Insert data in batches of size chunkSize
 	for word, diddList := range wtdm {
-		buf := &bytes.Buffer{}
-		enc := json.NewEncoder(buf)
-		enc.SetEscapeHTML(false)
-		err = enc.Encode(diddList)
+		// Encode diddList to JSON string
+		valueStr, err := json.Marshal(diddList)
 		if err != nil {
 			return err
 		}
-		valueStr := buf.String()
-		valueStr = strings.Trim(valueStr, "\n")
 
-		// Determine if the word is Latin or Cyrillic
-		isLatin := utils.IsLatin(word)
+		// Initialize the language flags
+		isFromKbd, isToKbd := false, false
+		isFromEn, isToEn := false, false
+		isFromAdy, isToAdy := false, false
+		isFromAr, isToAr := false, false
+		isFromTu, isToTu := false, false
+		isFromRu, isToRu := false, false
+		isFromHe, isToHe := false, false
 
-		// Execute the prepared statement within the transaction based on word type
-		var stmt *sql.Stmt
-		if isLatin {
-			stmt = stmtLatin
-		} else {
-			stmt = stmtCyrillic
+		// Check each dictionary entry for the languages
+		for _, didd := range diddList {
+			switch didd.FromLang {
+			case "Kbd":
+				isFromKbd = true
+			case "En":
+				isFromEn = true
+			case "Ady":
+				isFromAdy = true
+			case "Ar":
+				isFromAr = true
+			case "Tu":
+				isFromTu = true
+			case "Ru":
+				isFromRu = true
+			case "He":
+				isFromHe = true
+			case "Ady/Kbd", "Kbd/Ady":
+				isFromAdy = true
+				isFromKbd = true
+			}
+			switch didd.ToLang {
+			case "Kbd":
+				isToKbd = true
+			case "En":
+				isToEn = true
+			case "Ady":
+				isToAdy = true
+			case "Ar":
+				isToAr = true
+			case "Tu":
+				isToTu = true
+			case "Ru":
+				isToRu = true
+			case "He":
+				isToHe = true
+			case "Ady/Kbd", "Kbd/Ady":
+				isToAdy = true
+				isToKbd = true
+			}
 		}
 
-		// Execute the prepared statement
+		// Execute the prepared statement within the transaction
 		_, err = tx.Stmt(stmt).Exec(
-			word, valueStr,
+			word, string(valueStr),
 			isFromKbd, isToKbd,
 			isFromEn, isToEn,
 			isFromAdy, isToAdy,
@@ -253,25 +231,44 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 		}
 	}
 
-	fmt.Println("Database and tables created successfully!")
+	fmt.Println("Data insertion completed successfully!")
 	return nil
 }
 
+// CallAllConverts processes HTML files and stores data into SQLite database
 func CallAllConverts() {
-	wordToDefList := make(WordToDiddMap)
-	// take all HTML files from the following directory
+	// Initialize the SQLite database
+	fileName := "wordToDefsInDiffDicts.db"
+	err := InitializeDB(fileName)
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		err := CloseDB()
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	// Initialize maps and variables
+	latinWordToDefList := make(WordToDiddMap)
+	cyrllicWordToDefList := make(WordToDiddMap)
 	distDictsDir := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDictsInHTML"
 	filePathList := utils.GetAllFilesInDirectory(distDictsDir)
 	dictWordCountMap := make(map[string]DictCounter)
+
+	// Process each HTML file
 	for _, filePath := range filePathList {
+		// Read and parse JSON data from HTML file
 		fileToStr := utils.ReadEntireFile(filePath)
 		fileStrToBytes := []byte(fileToStr)
 		var dictObject wordObject.DictionaryObject
 		if err := json.Unmarshal(fileStrToBytes, &dictObject); err != nil {
-			fmt.Printf("Invalid json file: %s\n. Reason: %s", filePath, err.Error())
-			return
+			fmt.Printf("Invalid JSON file: %s\n. Reason: %s\n", filePath, err.Error())
+			continue
 		}
 
+		// Process each word in the dictionary object
 		for word, wordObj := range dictObject.Words {
 			safeWord := regularWordToSafeWord(word)
 			safeWord = strings.ToLower(safeWord)
@@ -279,17 +276,19 @@ func CallAllConverts() {
 			// Determine if the word is Latin or Cyrillic
 			isLatin := utils.IsLatin(safeWord)
 
-			// Insert into the appropriate map based on word type
-			if _, ok := wordToDefList[safeWord]; !ok {
-				wordToDefList[safeWord] = make([]*DefinitionsInDifferentDictionaries, 0)
-			}
-			wordToDefList[safeWord] = append(wordToDefList[safeWord], &DefinitionsInDifferentDictionaries{
+			// Add word to the appropriate map based on language type
+			didd := &DefinitionsInDifferentDictionaries{
 				Title:    dictObject.Title,
 				Html:     wordObj.FullDefinitionInHtml,
 				FromLang: dictObject.FromLang,
 				ToLang:   dictObject.ToLang,
 				Spelling: safeWord,
-			})
+			}
+			if isLatin {
+				latinWordToDefList[safeWord] = append(latinWordToDefList[safeWord], didd)
+			} else {
+				cyrllicWordToDefList[safeWord] = append(cyrllicWordToDefList[safeWord], didd)
+			}
 
 			// Update dictionary word count map
 			if _, ok := dictWordCountMap[dictObject.Title]; !ok {
@@ -300,17 +299,12 @@ func CallAllConverts() {
 					Title:    dictObject.Title,
 				}
 			}
-			dictWordCountMap[dictObject.Title] = DictCounter{
-				Count:    dictWordCountMap[dictObject.Title].Count + 1,
-				FromLang: dictObject.FromLang,
-				ToLang:   dictObject.ToLang,
-				Title:    dictObject.Title,
-			}
+			dictWordCountMap[dictObject.Title].Count += 1
 		}
 	}
 
 	// Convert dictionary word count map to array and save to file
-	dictWordCountMapToArray := make([]DictCounter, 0)
+	dictWordCountMapToArray := make([]DictCounter, 0, len(dictWordCountMap))
 	for _, dictCounter := range dictWordCountMap {
 		dictWordCountMapToArray = append(dictWordCountMapToArray, dictCounter)
 	}
@@ -320,11 +314,18 @@ func CallAllConverts() {
 	}
 	utils.CreateFileWithString("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\dictTitles.txt", string(dictWordCountMapJson))
 
-	// Insert data into SQLite database
-	err = wordToDefList.ToSqliteDb(10000)
+	// Insert Latin and Cyrillic words into separate tables
+	err = latinWordToDefList.ToSqliteDb("latinWordsTable", 10000)
 	if err != nil {
 		panic(err)
 	}
+
+	err = cyrllicWordToDefList.ToSqliteDb("cyrillicWordsTable", 10000)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Data processing completed successfully!")
 }
 
 func regularWordToSafeWord(word string) string {
