@@ -2,51 +2,6 @@
 	"title": "Jonty Yamisha's Kabardian to Russian dictionary",
 	"id": 20,
 	"words": {
-		" къару псори ехьэл1ауэ": {
-			"spelling": " къару псори ехьэл1ауэ",
-			"cognates": [],
-			"redirect": "",
-			"full_definition_in_html": "",
-			"definitions": [
-				{
-					"meaning": "напряжённо",
-					"examples": []
-				}
-			],
-			"derivation": "",
-			"type": "adverb",
-			"synonyms": []
-		},
-		"(абы) щхьэк1э къэмынэу": {
-			"spelling": "(абы) щхьэк1э къэмынэу",
-			"cognates": [],
-			"redirect": "",
-			"full_definition_in_html": "",
-			"definitions": [
-				{
-					"meaning": "несмотря",
-					"examples": []
-				}
-			],
-			"derivation": "",
-			"type": "preposition",
-			"synonyms": []
-		},
-		"(и) гум къеуэн": {
-			"spelling": "(и) гум къеуэн",
-			"cognates": [],
-			"redirect": "",
-			"full_definition_in_html": "",
-			"definitions": [
-				{
-					"meaning": "переживать",
-					"examples": []
-				}
-			],
-			"derivation": "",
-			"type": "verb",
-			"synonyms": []
-		},
 		"-и": {
 			"spelling": "-и",
 			"cognates": [],
@@ -172234,6 +172189,21 @@
 			],
 			"derivation": "",
 			"type": "adjective",
+			"synonyms": []
+		},
+		"щхьэк1э къэмынэу": {
+			"spelling": "щхьэк1э къэмынэу",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "",
+			"definitions": [
+				{
+					"meaning": "несмотря",
+					"examples": []
+				}
+			],
+			"derivation": "",
+			"type": "preposition",
 			"synonyms": []
 		},
 		"щхьэкуц1": {

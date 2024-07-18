@@ -57,13 +57,15 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 	}(db)
 
 	// Adjust the CREATE TABLE statement to set a limit based on the longest spelling
-	maxLength := determineMaxLength(wtdm) // Call determineMaxLength to get the longest word length
+	// Call determineMaxLength to get the longest word length
+	maxLength, longestWord := determineMaxLength(wtdm)
+	fmt.Printf("Longest word: %s (%d characters)\n", longestWord, maxLength)
 
-	// Create the table with the original column names and additional boolean columns
+	// Create the Latin words table
 	_, err = db.ExecContext(
 		context.Background(),
-		`CREATE TABLE IF NOT EXISTS keyvalue (
-			key VARCHAR(`+strconv.Itoa(maxLength)+`) PRIMARY KEY,  -- Set VARCHAR length based on maxLength
+		`CREATE TABLE IF NOT EXISTS latinWordsTable (
+			key VARCHAR(`+strconv.Itoa(maxLength)+`) PRIMARY KEY,
 			value TEXT,
 			isFromKbd BOOLEAN,
 			isToKbd BOOLEAN,
@@ -85,19 +87,53 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 		return err
 	}
 
-	// Create index on key column for faster lookup
+	// Create the Cyrillic words table
 	_, err = db.ExecContext(
 		context.Background(),
-		`CREATE INDEX IF NOT EXISTS idx_keyvalue_key ON keyvalue (key);`,
+		`CREATE TABLE IF NOT EXISTS cyrillicWordsTable (
+			key VARCHAR(`+strconv.Itoa(maxLength)+`) PRIMARY KEY,
+			value TEXT,
+			isFromKbd BOOLEAN,
+			isToKbd BOOLEAN,
+			isFromEn BOOLEAN,
+			isToEn BOOLEAN,
+			isFromAdy BOOLEAN,
+			isToAdy BOOLEAN,
+			isFromAr BOOLEAN,
+			isToAr BOOLEAN,
+			isFromTu BOOLEAN,
+			isToTu BOOLEAN,
+			isFromRu BOOLEAN,
+			isToRu BOOLEAN,
+			isFromHe BOOLEAN,
+			isToHe BOOLEAN
+		);`,
 	)
 	if err != nil {
 		return err
 	}
 
-	// Prepare the insert statement
-	stmt, err := db.PrepareContext(
+	// Create indexes on key columns for faster lookup
+	_, err = db.ExecContext(
 		context.Background(),
-		`INSERT INTO keyvalue (
+		`CREATE INDEX IF NOT EXISTS idx_latinWordsTable_key ON latinWordsTable (key);`,
+	)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.ExecContext(
+		context.Background(),
+		`CREATE INDEX IF NOT EXISTS idx_cyrillicWordsTable_key ON cyrillicWordsTable (key);`,
+	)
+	if err != nil {
+		return err
+	}
+
+	// Prepare the insert statements for both tables
+	stmtLatin, err := db.PrepareContext(
+		context.Background(),
+		`INSERT INTO latinWordsTable (
 			key, value, 
 			isFromKbd, isToKbd, 
 			isFromEn, isToEn, 
@@ -117,7 +153,31 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 			fmt.Println("Error closing prepared statement:", err)
 			return
 		}
-	}(stmt)
+	}(stmtLatin)
+
+	stmtCyrillic, err := db.PrepareContext(
+		context.Background(),
+		`INSERT INTO cyrillicWordsTable (
+			key, value, 
+			isFromKbd, isToKbd, 
+			isFromEn, isToEn, 
+			isFromAdy, isToAdy, 
+			isFromAr, isToAr, 
+			isFromTu, isToTu, 
+			isFromRu, isToRu, 
+			isFromHe, isToHe
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+	)
+	if err != nil {
+		return err
+	}
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			fmt.Println("Error closing prepared statement:", err)
+			return
+		}
+	}(stmtCyrillic)
 
 	// Begin a transaction for batch insertion
 	tx, err := db.Begin()
@@ -147,58 +207,18 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 		valueStr := buf.String()
 		valueStr = strings.Trim(valueStr, "\n")
 
-		// Initialize the language flags
-		isFromKbd, isToKbd := false, false
-		isFromEn, isToEn := false, false
-		isFromAdy, isToAdy := false, false
-		isFromAr, isToAr := false, false
-		isFromTu, isToTu := false, false
-		isFromRu, isToRu := false, false
-		isFromHe, isToHe := false, false
+		// Determine if the word is Latin or Cyrillic
+		isLatin := utils.IsLatin(word)
 
-		// Check each dictionary entry for the languages
-		for _, didd := range diddList {
-			switch didd.FromLang {
-			case "Kbd":
-				isFromKbd = true
-			case "En":
-				isFromEn = true
-			case "Ady":
-				isFromAdy = true
-			case "Ar":
-				isFromAr = true
-			case "Tu":
-				isFromTu = true
-			case "Ru":
-				isFromRu = true
-			case "He":
-				isFromHe = true
-			case "Ady/Kbd", "Kbd/Ady":
-				isFromAdy = true
-				isFromKbd = true
-			}
-			switch didd.ToLang {
-			case "Kbd":
-				isToKbd = true
-			case "En":
-				isToEn = true
-			case "Ady":
-				isToAdy = true
-			case "Ar":
-				isToAr = true
-			case "Tu":
-				isToTu = true
-			case "Ru":
-				isToRu = true
-			case "He":
-				isToHe = true
-			case "Ady/Kbd", "Kbd/Ady":
-				isToAdy = true
-				isToKbd = true
-			}
+		// Execute the prepared statement within the transaction based on word type
+		var stmt *sql.Stmt
+		if isLatin {
+			stmt = stmtLatin
+		} else {
+			stmt = stmtCyrillic
 		}
 
-		// Execute the prepared statement within the transaction
+		// Execute the prepared statement
 		_, err = tx.Stmt(stmt).Exec(
 			word, valueStr,
 			isFromKbd, isToKbd,
@@ -233,7 +253,7 @@ func (wtdm WordToDiddMap) ToSqliteDb(chunkSize int) error {
 		}
 	}
 
-	fmt.Println("Database and table created successfully!")
+	fmt.Println("Database and tables created successfully!")
 	return nil
 }
 
@@ -255,6 +275,11 @@ func CallAllConverts() {
 		for word, wordObj := range dictObject.Words {
 			safeWord := regularWordToSafeWord(word)
 			safeWord = strings.ToLower(safeWord)
+
+			// Determine if the word is Latin or Cyrillic
+			isLatin := utils.IsLatin(safeWord)
+
+			// Insert into the appropriate map based on word type
 			if _, ok := wordToDefList[safeWord]; !ok {
 				wordToDefList[safeWord] = make([]*DefinitionsInDifferentDictionaries, 0)
 			}
@@ -266,6 +291,7 @@ func CallAllConverts() {
 				Spelling: safeWord,
 			})
 
+			// Update dictionary word count map
 			if _, ok := dictWordCountMap[dictObject.Title]; !ok {
 				dictWordCountMap[dictObject.Title] = DictCounter{
 					Count:    0,
@@ -283,6 +309,7 @@ func CallAllConverts() {
 		}
 	}
 
+	// Convert dictionary word count map to array and save to file
 	dictWordCountMapToArray := make([]DictCounter, 0)
 	for _, dictCounter := range dictWordCountMap {
 		dictWordCountMapToArray = append(dictWordCountMapToArray, dictCounter)
@@ -291,9 +318,9 @@ func CallAllConverts() {
 	if err != nil {
 		panic(err)
 	}
-
 	utils.CreateFileWithString("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\dictTitles.txt", string(dictWordCountMapJson))
 
+	// Insert data into SQLite database
 	err = wordToDefList.ToSqliteDb(10000)
 	if err != nil {
 		panic(err)
@@ -307,12 +334,15 @@ func regularWordToSafeWord(word string) string {
 }
 
 // Helper function to determine the longest spelling for VARCHAR size
-func determineMaxLength(wtdm WordToDiddMap) int {
-	maxLength := 0
+func determineMaxLength(wtdm WordToDiddMap) (maxLength int, longestWord string) {
+	maxLength = 0
+	longestWord = ""
+
 	for word := range wtdm {
 		if len(word) > maxLength {
 			maxLength = len(word)
+			longestWord = word
 		}
 	}
-	return maxLength
+	return maxLength, longestWord
 }
