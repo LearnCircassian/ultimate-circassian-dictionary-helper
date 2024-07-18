@@ -1,6 +1,4 @@
 {
-  " къару псори ехьэл1ауэ": {"type":"adverb","definitions":[{"meaning":"напряжённо"}]},
-  "(и) гум къеуэн": {"type":"verb","definitions":[{"meaning":"переживать"}]},
   "-т1э": {"type":"conjunction","definitions":[{"meaning":"разве"},{"meaning":"разве\u2026 не"}]},
   "-тэмэ": {"type":"conjunction","definitions":[{"meaning":"кабы"}]},
   "1ахъ": {"type":"exclamation","definitions":[{"meaning":"эх"}]},
@@ -1273,7 +1271,7 @@
   "япэрауэ": {"type":"phrase","definitions":[{"meaning":"сначала"}]},
   "япэщ1ык1э": {"type":"phrase","definitions":[{"meaning":"вначале"}]},
   "ят1агъуалъэ": {"type":"adjectival noun","definitions":[{"meaning":"глинистый"}]},
-  "(абы) щхьэк1э къэмынэу": {"type":"preposition","definitions":[{"meaning":"несмотря"}]},
+  "щхьэк1э къэмынэу": {"type":"preposition","definitions":[{"meaning":"несмотря"}]},
   "-и": {"type":"adverb","definitions":[{"meaning":"также"}]},
   "-к1и хъунщ": {"type":"particle","definitions":[{"meaning":"авось"}]},
   "-к1э": {"type":"adverb","definitions":[{"meaning":"то"}]},
