@@ -566,7 +566,7 @@ func convert7() {
 
 // convert8() Ady-Tur_Huvaj.json
 func convert8() {
-	dictObj := wordObject.NewDictionaryObject("Хъуажь (2007)", 8, "Ady/Kbd", "Tu", "HTML")
+	dictObj := wordObject.NewDictionaryObject("Хъуажь (2007)", 8, "Ady/Kbd", "Tr", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Tur_Huvaj.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Tur_Huvaj.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -1152,7 +1152,7 @@ func convert20() {
 
 // convert21() Kbd-Tu-Jonty.json
 func convert21() {
-	dictObj := wordObject.NewDictionaryObject("Jonty Yamisha's Kabardian to Turkish dictionary", 21, "Kbd", "Tu", "JSON")
+	dictObj := wordObject.NewDictionaryObject("Jonty Yamisha's Kabardian to Turkish dictionary", 21, "Kbd", "Tr", "JSON")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-Tu-Jonty.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Kbd-Tu-Jonty.json", dictObj.Id)
 
@@ -1433,7 +1433,7 @@ func convert25() {
 
 // convert26() Tu-Kbd-Jonty.json
 func convert26() {
-	dictObj := wordObject.NewDictionaryObject("Jonty Yamisha's Turkish to Kabardian dictionary", 26, "Tu", "Kbd", "JSON")
+	dictObj := wordObject.NewDictionaryObject("Jonty Yamisha's Turkish to Kabardian dictionary", 26, "Tr", "Kbd", "JSON")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tu-Kbd-Jonty.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tu-Kbd-Jonty.json", dictObj.Id)
 
@@ -1472,7 +1472,7 @@ func convert26() {
 
 // convert27() Tur-Ady_Abaze.json
 func convert27() {
-	dictObj := wordObject.NewDictionaryObject("Ибрагим Алхаз Абазэ (2005)", 27, "Tu", "Kbd", "HTML")
+	dictObj := wordObject.NewDictionaryObject("Ибрагим Алхаз Абазэ (2005)", 27, "Tr", "Kbd", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tur-Ady_Abaze.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tur-Ady_Abaze.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -1532,7 +1532,7 @@ func convert27() {
 
 // convert28() Tur-Ady_Huvaj.json
 func convert28() {
-	dictObj := wordObject.NewDictionaryObject("Хъуажь (2007)", 28, "Tu", "Ady/Kbd", "HTML")
+	dictObj := wordObject.NewDictionaryObject("Хъуажь (2007)", 28, "Tr", "Ady/Kbd", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tur-Ady_Huvaj.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tur-Ady_Huvaj.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -1592,7 +1592,7 @@ func convert28() {
 
 // convert29() Tur-Ady_Teshu.json
 func convert29() {
-	dictObj := wordObject.NewDictionaryObject("Т1эшъу (1991)", 29, "Tu", "Ady", "HTML")
+	dictObj := wordObject.NewDictionaryObject("Т1эшъу (1991)", 29, "Tr", "Ady", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tur-Ady_Teshu.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tur-Ady_Teshu.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)

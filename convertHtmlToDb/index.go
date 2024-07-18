@@ -78,8 +78,8 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
             isToAdy BOOLEAN,
             isFromAr BOOLEAN,
             isToAr BOOLEAN,
-            isFromTu BOOLEAN,
-            isToTu BOOLEAN,
+            isFromTr BOOLEAN,
+            isToTr BOOLEAN,
             isFromRu BOOLEAN,
             isToRu BOOLEAN,
             isFromHe BOOLEAN,
@@ -166,7 +166,7 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
 				isFromAdy = true
 			case "Ar":
 				isFromAr = true
-			case "Tu":
+			case "Tr":
 				isFromTu = true
 			case "Ru":
 				isFromRu = true
@@ -185,7 +185,7 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
 				isToAdy = true
 			case "Ar":
 				isToAr = true
-			case "Tu":
+			case "Tr":
 				isToTu = true
 			case "Ru":
 				isToRu = true

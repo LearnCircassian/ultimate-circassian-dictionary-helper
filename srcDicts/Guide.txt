@@ -69,7 +69,7 @@
                 new DictDetail(
                         folderPath + "Ady-Tur_Huvaj.json",
                         6, // "Хъуажь",
-                        "Ady/Kbd  -> Tu",
+                        "Ady/Kbd  -> Tr",
                         FormatType.HTML),
                 new DictDetail(
                         folderPath + "Rus-Ady_Blaghoj.json",
@@ -89,17 +89,17 @@
                 new DictDetail(
                         folderPath + "Tur-Ady_Abaze.json",
                         10, // "Абазэ",
-                        "Tu -> Kbd",
+                        "Tr -> Kbd",
                         FormatType.HTML),
                 new DictDetail(
                         folderPath + "Tur-Ady_Huvaj.json",
                         11, // "Хъуажь",
-                        "Tu -> Ady/Kbd",
+                        "Tr -> Ady/Kbd",
                         FormatType.HTML),
                 new DictDetail(
                         folderPath + "Tur-Ady_Teshu.json",
                         12, // "ТIэшъу",
-                        "Tu -> Ady",
+                        "Tr -> Ady",
                         FormatType.HTML),
                 // New dictionaries
                 new DictDetail(
@@ -175,7 +175,7 @@
                 new DictDetail(
                         folderPath + "Kbd-Tu-Jonty.json",
                         27, // "Jonty Kabardian-Turkish Dictionary",
-                        "Kbd -> Tu",
+                        "Kbd -> Tr",
                         FormatType.JSON),
                 new DictDetail(
                         folderPath + "Ru-Kbd-Jonty.json",
