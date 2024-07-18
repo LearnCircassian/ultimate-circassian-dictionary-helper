@@ -86522,8 +86522,18 @@
 			"type": "",
 			"synonyms": []
 		},
-		"sert toprak|sert vücut": {
-			"spelling": "sert toprak|sert vücut",
+		"sert toprak": {
+			"spelling": "sert toprak",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "<div style='margin-left:1em'>пкъые</div>",
+			"definitions": [],
+			"derivation": "",
+			"type": "",
+			"synonyms": []
+		},
+		"sert vücut": {
+			"spelling": "sert vücut",
 			"cognates": [],
 			"redirect": "",
 			"full_definition_in_html": "<div style='margin-left:1em'>пкъые</div>",
@@ -96632,6 +96642,16 @@
 			"type": "",
 			"synonyms": []
 		},
+		"ticaret": {
+			"spelling": "ticaret",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "<div style='margin-left:1em'>сатыу</div>",
+			"definitions": [],
+			"derivation": "",
+			"type": "",
+			"synonyms": []
+		},
 		"ticaret yolu": {
 			"spelling": "ticaret yolu",
 			"cognates": [],
@@ -96862,8 +96882,18 @@
 			"type": "",
 			"synonyms": []
 		},
-		"toka etmek|1ак1э ыштэн, ы1апэ ыубытын, ы1э убытын|tokat": {
-			"spelling": "toka etmek|1ак1э ыштэн, ы1апэ ыубытын, ы1э убытын|tokat",
+		"toka etmek": {
+			"spelling": "toka etmek",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "<div style='margin-left:1em'>утын</div>",
+			"definitions": [],
+			"derivation": "",
+			"type": "",
+			"synonyms": []
+		},
+		"tokat": {
+			"spelling": "tokat",
 			"cognates": [],
 			"redirect": "",
 			"full_definition_in_html": "<div style='margin-left:1em'>утын</div>",
@@ -98462,8 +98492,8 @@
 			"type": "",
 			"synonyms": []
 		},
-		"tıbbıye|1эзэныгьэ|ticaret": {
-			"spelling": "tıbbıye|1эзэныгьэ|ticaret",
+		"tıbbıyeticaret": {
+			"spelling": "tıbbıyeticaret",
 			"cognates": [],
 			"redirect": "",
 			"full_definition_in_html": "<div style='margin-left:1em'>сатыу</div>",
@@ -98472,8 +98502,28 @@
 			"type": "",
 			"synonyms": []
 		},
-		"tıkaç|1уко|tıkalı|1усагь, кудагъэ|tıkamak|1укон, 1усэн, кудэн|tıkırdatarak vurmak": {
-			"spelling": "tıkaç|1уко|tıkalı|1усагь, кудагъэ|tıkamak|1укон, 1усэн, кудэн|tıkırdatarak vurmak",
+		"tıkalı": {
+			"spelling": "tıkalı",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "<div style='margin-left:1em'>теу1он</div>",
+			"definitions": [],
+			"derivation": "",
+			"type": "",
+			"synonyms": []
+		},
+		"tıkamak": {
+			"spelling": "tıkamak",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "<div style='margin-left:1em'>теу1он</div>",
+			"definitions": [],
+			"derivation": "",
+			"type": "",
+			"synonyms": []
+		},
+		"tıkaç": {
+			"spelling": "tıkaç",
 			"cognates": [],
 			"redirect": "",
 			"full_definition_in_html": "<div style='margin-left:1em'>теу1он</div>",
@@ -98504,6 +98554,16 @@
 		},
 		"tıktık vurmak": {
 			"spelling": "tıktık vurmak",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "<div style='margin-left:1em'>теу1он</div>",
+			"definitions": [],
+			"derivation": "",
+			"type": "",
+			"synonyms": []
+		},
+		"tıkırdatarak vurmak": {
+			"spelling": "tıkırdatarak vurmak",
 			"cognates": [],
 			"redirect": "",
 			"full_definition_in_html": "<div style='margin-left:1em'>теу1он</div>",
@@ -98612,8 +98672,28 @@
 			"type": "",
 			"synonyms": []
 		},
-		"tırnak arpacığı|1эбжъэнэдак1|tırnak ucu|1эбжъэнак1|tırnakla eşelemek": {
-			"spelling": "tırnak arpacığı|1эбжъэнэдак1|tırnak ucu|1эбжъэнак1|tırnakla eşelemek",
+		"tırnak arpacığı": {
+			"spelling": "tırnak arpacığı",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "<div style='margin-left:1em'>упхъон</div>",
+			"definitions": [],
+			"derivation": "",
+			"type": "",
+			"synonyms": []
+		},
+		"tırnak ucu": {
+			"spelling": "tırnak ucu",
+			"cognates": [],
+			"redirect": "",
+			"full_definition_in_html": "<div style='margin-left:1em'>упхъон</div>",
+			"definitions": [],
+			"derivation": "",
+			"type": "",
+			"synonyms": []
+		},
+		"tırnakla eşelemek": {
+			"spelling": "tırnakla eşelemek",
 			"cognates": [],
 			"redirect": "",
 			"full_definition_in_html": "<div style='margin-left:1em'>упхъон</div>",

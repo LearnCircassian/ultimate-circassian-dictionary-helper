@@ -300,7 +300,7 @@ func convert3() {
 
 // convert4() Адэм Шъэджашъ и адыгэбзэ-инджылыбзэ гущы1алъэ - Ady-En_Adam.json
 func convert4() {
-	dictObj := wordObject.NewDictionaryObject("Adam Shagash's Adyghe to English Dictionary", 4, "Ady", "En", "JSON")
+	dictObj := wordObject.NewDictionaryObject("Adam Shagash's Adyghe to English Dictionary (2021)", 4, "Ady", "En", "JSON")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-En_Adam.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-En_Adam.json", dictObj.Id)
 
@@ -597,6 +597,7 @@ func convert8() {
 		spelling = strings.Trim(spelling, "\t")
 		spelling = strings.ToLower(spelling)
 		spelling = convertIToCirStick(spelling)
+		splitSpelling := strings.Split(spelling, "/")
 
 		// second part
 		var obj = split[1]
@@ -607,11 +608,15 @@ func convert8() {
 		obj = strings.ReplaceAll(obj, "\\\"", "\u0022")
 		obj = convertIToCirStick(obj)
 
-		// Check if word exist, if it does, add definition, otherwise create new word
-		if _, ok := dictObj.Words[spelling]; !ok {
-			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
+		for _, s := range splitSpelling {
+			s = strings.Trim(s, " ")
+			s = strings.Trim(s, ",")
+			// Check if word exist, if it does, add definition, otherwise create new word
+			if _, ok := dictObj.Words[s]; !ok {
+				dictObj.Words[s] = wordObject.NewWordObject(spelling, "")
+			}
+			dictObj.Words[s].AddFullDefinitionInHtml(obj)
 		}
-		dictObj.Words[spelling].AddFullDefinitionInHtml(obj)
 		fmt.Printf("line %d: %s\n", idx, line)
 	})
 
@@ -664,7 +669,7 @@ func convert9() {
 
 // convert10() En-Ady_Adam.json
 func convert10() {
-	dictObj := wordObject.NewDictionaryObject("Adam Shagash's English to Adyghe Dictionary", 10, "En", "Ady", "JSON")
+	dictObj := wordObject.NewDictionaryObject("Adam Shagash's English to Adyghe Dictionary (2021)", 10, "En", "Ady", "JSON")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\En-Ady_Adam.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.En-Ady_Adam.json", dictObj.Id)
 

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "modernc.org/sqlite"
+	"sort"
 	"strings"
 	"ultimate-circassian-dictionary-helper/utils"
 	"ultimate-circassian-dictionary-helper/wordObject"
@@ -269,6 +270,11 @@ func CallAllConverts() {
 		}
 
 		for word, wordObj := range dictObject.Words {
+			if len(word) > 40 {
+				fmt.Printf("Word is too long: %s\n", word)
+				continue
+			}
+
 			safeWord := regularWordToSafeWord(word)
 			safeWord = strings.ToLower(safeWord)
 
@@ -334,6 +340,9 @@ func CallAllConverts() {
 		panic(err)
 	}
 
+	printTop20LongestWords(latinWordToDefList)
+	printTop20LongestWords(cyrillicWordToDefList)
+
 	fmt.Println("Data processing completed successfully!")
 }
 
@@ -355,4 +364,36 @@ func determineMaxLength(wtdm WordToDiddMap) (maxLength int, longestWord string) 
 		}
 	}
 	return maxLength, longestWord
+}
+
+func printTop20LongestWords(wtdm WordToDiddMap) {
+	// Print the top 20 longest words
+	wordLengthMap := make(map[string]int)
+	for word := range wtdm {
+		wordLengthMap[word] = len(word)
+	}
+
+	// Convert map to slice for sorting
+	type wordLength struct {
+		word   string
+		length int
+	}
+	var wordLengths []wordLength
+	for word, length := range wordLengthMap {
+		wordLengths = append(wordLengths, wordLength{word, length})
+	}
+
+	// Sort wordLengths slice by length (descending)
+	sort.Slice(wordLengths, func(i, j int) bool {
+		return wordLengths[i].length > wordLengths[j].length
+	})
+
+	// Print the top 20 longest words
+	fmt.Println("Top 20 longest words:")
+	for i, wl := range wordLengths {
+		if i >= 20 {
+			break
+		}
+		fmt.Printf("%d. %s (%d characters)\n", i+1, wl.word, wl.length)
+	}
 }
