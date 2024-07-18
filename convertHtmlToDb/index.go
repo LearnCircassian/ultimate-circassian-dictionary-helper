@@ -237,9 +237,23 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
 
 // CallAllConverts processes HTML files and stores data into SQLite database
 func CallAllConverts() {
+	// Initialize SQLite database
+	dbFileName := "wordToDefsInDiffDicts.db" // Provide the path to your SQLite database file
+	err := InitializeDB(dbFileName)
+	if err != nil {
+		panic(fmt.Errorf("failed to initialize database: %v", err))
+	}
+	defer func() {
+		err := CloseDB()
+		if err != nil {
+			fmt.Println("Error closing database:", err)
+		}
+	}()
+
+	// Proceed with data processing
 	latinWordToDefList := make(WordToDiddMap)
-	cyrllicWordToDefList := make(WordToDiddMap)
-	dictWordCountMap := make(map[string]*DictCounter) // Change to store pointers
+	cyrillicWordToDefList := make(WordToDiddMap)
+	dictWordCountMap := make(map[string]*DictCounter)
 
 	// Take all HTML files from the following directory
 	distDictsDir := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDictsInHTML"
@@ -273,10 +287,10 @@ func CallAllConverts() {
 					Spelling: safeWord,
 				})
 			} else {
-				if _, ok := cyrllicWordToDefList[safeWord]; !ok {
-					cyrllicWordToDefList[safeWord] = make([]*DefinitionsInDifferentDictionaries, 0)
+				if _, ok := cyrillicWordToDefList[safeWord]; !ok {
+					cyrillicWordToDefList[safeWord] = make([]*DefinitionsInDifferentDictionaries, 0)
 				}
-				cyrllicWordToDefList[safeWord] = append(cyrllicWordToDefList[safeWord], &DefinitionsInDifferentDictionaries{
+				cyrillicWordToDefList[safeWord] = append(cyrillicWordToDefList[safeWord], &DefinitionsInDifferentDictionaries{
 					Title:    dictObject.Title,
 					Html:     wordObj.FullDefinitionInHtml,
 					FromLang: dictObject.FromLang,
@@ -315,7 +329,7 @@ func CallAllConverts() {
 		panic(err)
 	}
 
-	err = cyrllicWordToDefList.ToSqliteDb("cyrillicWordsTable", 10000)
+	err = cyrillicWordToDefList.ToSqliteDb("cyrillicWordsTable", 10000)
 	if err != nil {
 		panic(err)
 	}
