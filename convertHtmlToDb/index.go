@@ -237,38 +237,23 @@ func (wtdm WordToDiddMap) ToSqliteDb(tableName string, chunkSize int) error {
 
 // CallAllConverts processes HTML files and stores data into SQLite database
 func CallAllConverts() {
-	// Initialize the SQLite database
-	fileName := "wordToDefsInDiffDicts.db"
-	err := InitializeDB(fileName)
-	if err != nil {
-		panic(err)
-	}
-	defer func() {
-		err := CloseDB()
-		if err != nil {
-			panic(err)
-		}
-	}()
-
-	// Initialize maps and variables
 	latinWordToDefList := make(WordToDiddMap)
 	cyrllicWordToDefList := make(WordToDiddMap)
+	dictWordCountMap := make(map[string]*DictCounter) // Change to store pointers
+
+	// Take all HTML files from the following directory
 	distDictsDir := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDictsInHTML"
 	filePathList := utils.GetAllFilesInDirectory(distDictsDir)
-	dictWordCountMap := make(map[string]DictCounter)
 
-	// Process each HTML file
 	for _, filePath := range filePathList {
-		// Read and parse JSON data from HTML file
 		fileToStr := utils.ReadEntireFile(filePath)
 		fileStrToBytes := []byte(fileToStr)
 		var dictObject wordObject.DictionaryObject
 		if err := json.Unmarshal(fileStrToBytes, &dictObject); err != nil {
-			fmt.Printf("Invalid JSON file: %s\n. Reason: %s\n", filePath, err.Error())
-			continue
+			fmt.Printf("Invalid json file: %s\n. Reason: %s", filePath, err.Error())
+			return
 		}
 
-		// Process each word in the dictionary object
 		for word, wordObj := range dictObject.Words {
 			safeWord := regularWordToSafeWord(word)
 			safeWord = strings.ToLower(safeWord)
@@ -276,37 +261,47 @@ func CallAllConverts() {
 			// Determine if the word is Latin or Cyrillic
 			isLatin := utils.IsLatin(safeWord)
 
-			// Add word to the appropriate map based on language type
-			didd := &DefinitionsInDifferentDictionaries{
-				Title:    dictObject.Title,
-				Html:     wordObj.FullDefinitionInHtml,
-				FromLang: dictObject.FromLang,
-				ToLang:   dictObject.ToLang,
-				Spelling: safeWord,
-			}
 			if isLatin {
-				latinWordToDefList[safeWord] = append(latinWordToDefList[safeWord], didd)
+				if _, ok := latinWordToDefList[safeWord]; !ok {
+					latinWordToDefList[safeWord] = make([]*DefinitionsInDifferentDictionaries, 0)
+				}
+				latinWordToDefList[safeWord] = append(latinWordToDefList[safeWord], &DefinitionsInDifferentDictionaries{
+					Title:    dictObject.Title,
+					Html:     wordObj.FullDefinitionInHtml,
+					FromLang: dictObject.FromLang,
+					ToLang:   dictObject.ToLang,
+					Spelling: safeWord,
+				})
 			} else {
-				cyrllicWordToDefList[safeWord] = append(cyrllicWordToDefList[safeWord], didd)
+				if _, ok := cyrllicWordToDefList[safeWord]; !ok {
+					cyrllicWordToDefList[safeWord] = make([]*DefinitionsInDifferentDictionaries, 0)
+				}
+				cyrllicWordToDefList[safeWord] = append(cyrllicWordToDefList[safeWord], &DefinitionsInDifferentDictionaries{
+					Title:    dictObject.Title,
+					Html:     wordObj.FullDefinitionInHtml,
+					FromLang: dictObject.FromLang,
+					ToLang:   dictObject.ToLang,
+					Spelling: safeWord,
+				})
 			}
 
-			// Update dictionary word count map
+			// Update dictionary word count map using pointers
 			if _, ok := dictWordCountMap[dictObject.Title]; !ok {
-				dictWordCountMap[dictObject.Title] = DictCounter{
+				dictWordCountMap[dictObject.Title] = &DictCounter{
 					Count:    0,
 					FromLang: dictObject.FromLang,
 					ToLang:   dictObject.ToLang,
 					Title:    dictObject.Title,
 				}
 			}
-			dictWordCountMap[dictObject.Title].Count += 1
+			dictWordCountMap[dictObject.Title].Count++
 		}
 	}
 
 	// Convert dictionary word count map to array and save to file
 	dictWordCountMapToArray := make([]DictCounter, 0, len(dictWordCountMap))
 	for _, dictCounter := range dictWordCountMap {
-		dictWordCountMapToArray = append(dictWordCountMapToArray, dictCounter)
+		dictWordCountMapToArray = append(dictWordCountMapToArray, *dictCounter) // Dereference pointer
 	}
 	dictWordCountMapJson, err := json.Marshal(dictWordCountMapToArray)
 	if err != nil {
