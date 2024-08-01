@@ -1697,6 +1697,15 @@ func convert30() {
 		s = strings.ReplaceAll(s, " 7.", "\n\t7.")
 		s = strings.ReplaceAll(s, " 8.", "\n\t8.")
 		s = strings.ReplaceAll(s, " 9.", "\n\t9.")
+		s = strings.ReplaceAll(s, "1.", "\n\t2.")
+		s = strings.ReplaceAll(s, "2.", "\n\t2.")
+		s = strings.ReplaceAll(s, "3.", "\n\t3.")
+		s = strings.ReplaceAll(s, "4.", "\n\t4.")
+		s = strings.ReplaceAll(s, "5.", "\n\t5.")
+		s = strings.ReplaceAll(s, "6.", "\n\t6.")
+		s = strings.ReplaceAll(s, "7.", "\n\t7.")
+		s = strings.ReplaceAll(s, "8.", "\n\t8.")
+		s = strings.ReplaceAll(s, "9.", "\n\t9.")
 		return s
 	}
 
