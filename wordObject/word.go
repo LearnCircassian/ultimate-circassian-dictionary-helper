@@ -159,7 +159,7 @@ func (w *WordObject) ToFullDefinitionHtml() string {
 
 	sb.WriteString("<h3>Definitions:</h3>")
 	for i, definition := range w.Definitions {
-		sb.WriteString(fmt.Sprintf("<div style='margin-left:1em'><font color='darkblue'><span style='font-weight:bold'>%d.</span></font> %s</div>", i+1, formatMeaningText(definition.Meaning)))
+		sb.WriteString(fmt.Sprintf("<div style='margin-left:1em; margin-bottom:1em'><font color='darkblue'><span style='font-weight:bold'>%d.</span></font> %s</div>", i+1, formatMeaningText(definition.Meaning)))
 		if len(definition.Examples) > 0 {
 			for _, example := range definition.Examples {
 				sb.WriteString(fmt.Sprintf("<div style='margin-left:3em'>%s — %s</div>", formatText(example.Sentence), formatText(example.Translation)))
