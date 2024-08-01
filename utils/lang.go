@@ -95,6 +95,15 @@ func StartsWithNumber(s string) bool {
 	return unicode.IsNumber(rune(s[0]))
 }
 
+func StartsWithSpecialCharacter(s string) bool {
+	s = strings.Trim(s, " ")
+	if len(s) < 1 {
+		return false
+	}
+	r := rune(s[0])
+	return !unicode.IsLetter(r) || r == '_' || r == '—' || r == '…'
+}
+
 // Function to trim leading and trailing spaces and slashes
 func TrimSlashes(s string) string {
 	return strings.Trim(s, " /")

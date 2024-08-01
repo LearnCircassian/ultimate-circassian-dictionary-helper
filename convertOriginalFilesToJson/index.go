@@ -46,6 +46,7 @@ func CallAllConverts() {
 	convert28()
 	convert29()
 	convert30()
+	convert31()
 
 	// print all the words in Circassian
 	fmt.Printf("\n--All the words in Circassian--\n")
@@ -567,7 +568,7 @@ func convert7() {
 
 // convert8() Ady-Tur_Huvaj.json
 func convert8() {
-	dictObj := wordObject.NewDictionaryObject("Хъуажь (2007)", 8, "Ady/Kbd", "Tr", "HTML")
+	dictObj := wordObject.NewDictionaryObject("Хъуажь - Circassian to Turkish (2007)", 8, "Ady/Kbd", "Tr", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Tur_Huvaj.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Tur_Huvaj.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -974,6 +975,28 @@ func convert17() {
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-En_Amjad.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Kbd-En_Amjad.json", dictObj.Id)
 
+	addNewLineAndTabToNumberDot := func(s string) string {
+		s = strings.ReplaceAll(s, " 1.", "\n1.")
+		s = strings.ReplaceAll(s, " 2.", "\n2.")
+		s = strings.ReplaceAll(s, " 3.", "\n3.")
+		s = strings.ReplaceAll(s, " 4.", "\n4.")
+		s = strings.ReplaceAll(s, " 5.", "\n5.")
+		s = strings.ReplaceAll(s, " 6.", "\n6.")
+		s = strings.ReplaceAll(s, " 7.", "\n7.")
+		s = strings.ReplaceAll(s, " 8.", "\n8.")
+		s = strings.ReplaceAll(s, " 9.", "\n9.")
+		s = strings.ReplaceAll(s, " 1)", "\n1)")
+		s = strings.ReplaceAll(s, " 2)", "\n2)")
+		s = strings.ReplaceAll(s, " 3)", "\n3)")
+		s = strings.ReplaceAll(s, " 4)", "\n4)")
+		s = strings.ReplaceAll(s, " 5)", "\n5)")
+		s = strings.ReplaceAll(s, " 6)", "\n6)")
+		s = strings.ReplaceAll(s, " 7)", "\n7)")
+		s = strings.ReplaceAll(s, " 8)", "\n8)")
+		s = strings.ReplaceAll(s, " 9)", "\n9)")
+		return s
+	}
+
 	// "1уеин": {"type":"intransitive verb","definitions":[{"meaning":"to bleat (of goats)"},{"meaning":"to stick with putty, to do up (ex.: window)"}]},
 	// covert file to json
 	var originalDict map[string]struct {
@@ -1001,7 +1024,8 @@ func convert17() {
 			dictObj.Words[key].Type = value.Type
 		}
 		for _, definition := range value.Definitions {
-			dictObj.Words[key].AddOneDefinition(definition.Meaning, []wordObject.Example{})
+			meaningAdjusted := addNewLineAndTabToNumberDot(definition.Meaning)
+			dictObj.Words[key].AddOneDefinition(meaningAdjusted, []wordObject.Example{})
 		}
 		fmt.Printf("Index %d key %s\n", idx, key)
 		idx++
@@ -1533,7 +1557,7 @@ func convert27() {
 
 // convert28() Tur-Ady_Huvaj.json
 func convert28() {
-	dictObj := wordObject.NewDictionaryObject("Хъуажь (2007)", 28, "Tr", "Ady/Kbd", "HTML")
+	dictObj := wordObject.NewDictionaryObject("Хъуажь - Turkish to Circassian (2007)", 28, "Tr", "Ady/Kbd", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tur-Ady_Huvaj.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tur-Ady_Huvaj.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -1657,18 +1681,46 @@ func convert30() {
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Rus_ThreeVolumes.txt"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Rus_ThreeVolumes.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
-
 	entireFileStr := utils.ReadEntireFile(srcFilePath)
 	lines := strings.Split(entireFileStr, "\n")
 	mapRes := make(map[string][]string)
 	var currentKey string
 	var currentValue strings.Builder
 
+	addNewLineAndTabToNumberDot := func(s string) string {
+		s = strings.ReplaceAll(s, " 1.", "\n\t1.")
+		s = strings.ReplaceAll(s, " 2.", "\n\t2.")
+		s = strings.ReplaceAll(s, " 3.", "\n\t3.")
+		s = strings.ReplaceAll(s, " 4.", "\n\t4.")
+		s = strings.ReplaceAll(s, " 5.", "\n\t5.")
+		s = strings.ReplaceAll(s, " 6.", "\n\t6.")
+		s = strings.ReplaceAll(s, " 7.", "\n\t7.")
+		s = strings.ReplaceAll(s, " 8.", "\n\t8.")
+		s = strings.ReplaceAll(s, " 9.", "\n\t9.")
+
+		// if string starts with a number
+		if utils.StartsWithNumber(s) {
+			s = strings.ReplaceAll(s, "1.", "\n\t1.")
+			s = strings.ReplaceAll(s, "2.", "\n\t2.")
+			s = strings.ReplaceAll(s, "3.", "\n\t3.")
+			s = strings.ReplaceAll(s, "4.", "\n\t4.")
+			s = strings.ReplaceAll(s, "5.", "\n\t5.")
+			s = strings.ReplaceAll(s, "6.", "\n\t6.")
+			s = strings.ReplaceAll(s, "7.", "\n\t7.")
+			s = strings.ReplaceAll(s, "8.", "\n\t8.")
+			s = strings.ReplaceAll(s, "9.", "\n\t9.")
+		}
+		return s
+	}
+
 	for idx, line := range lines {
 		trimmedLine := utils.TrimSlashes(line)
 
 		// Split the line into words
 		words := strings.Fields(trimmedLine)
+
+		// Add new line and tab to number dot
+		trimmedLine = addNewLineAndTabToNumberDot(trimmedLine)
 
 		if len(words) == 0 {
 			invalidLinesList = append(invalidLinesList, trimmedLine)
@@ -1702,6 +1754,104 @@ func convert30() {
 		// Check if word exist, if it does, add definition, otherwise create new word
 		spelling := strings.ToLower(key)
 		spelling = utils.ConvertIToCirStick(spelling)
+
+		if _, ok := dictObj.Words[spelling]; !ok {
+			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
+		}
+		for _, value := range values {
+			value = utils.ConvertIToCirStick(value)
+			dictObj.Words[spelling].AddOneDefinition(value, []wordObject.Example{})
+		}
+	}
+
+	// print invalid lines
+	fmt.Printf("\n--Invalid lines in %s:--\n", srcFilePath)
+	for idx, line := range invalidLinesList {
+		fmt.Printf("%d. %s\n", idx, line)
+	}
+
+	utils.CreateFileWithDictionaryObject(distFilePath, dictObj)
+}
+
+// convert31() Tu-Ady_Hilmi.txt
+func convert31() {
+	dictObj := wordObject.NewDictionaryObject("Ацумыжъ Хилми (2013)", 31, "Tr", "Ady", "JSON")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tu-Ady_Hilmi.txt"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tu-Ady_Hilmi.json", dictObj.Id)
+	invalidLinesList := make([]string, 0)
+	entireFileStr := utils.ReadEntireFile(srcFilePath)
+	lines := strings.Split(entireFileStr, "\n")
+	mapRes := make(map[string][]string)
+	var currentKey string
+	var currentValue strings.Builder
+
+	addNewLineAndTabToNumberDot := func(s string) string {
+		s = strings.ReplaceAll(s, " 1.", "\n\t1.")
+		s = strings.ReplaceAll(s, " 2.", "\n\t2.")
+		s = strings.ReplaceAll(s, " 3.", "\n\t3.")
+		s = strings.ReplaceAll(s, " 4.", "\n\t4.")
+		s = strings.ReplaceAll(s, " 5.", "\n\t5.")
+		s = strings.ReplaceAll(s, " 6.", "\n\t6.")
+		s = strings.ReplaceAll(s, " 7.", "\n\t7.")
+		s = strings.ReplaceAll(s, " 8.", "\n\t8.")
+		s = strings.ReplaceAll(s, " 9.", "\n\t9.")
+		s = strings.ReplaceAll(s, " 1)", "\n\t\t1)")
+		s = strings.ReplaceAll(s, " 2)", "\n\t\t2)")
+		s = strings.ReplaceAll(s, " 3)", "\n\t\t3)")
+		s = strings.ReplaceAll(s, " 4)", "\n\t\t4)")
+		s = strings.ReplaceAll(s, " 5)", "\n\t\t5)")
+		s = strings.ReplaceAll(s, " 6)", "\n\t\t6)")
+		s = strings.ReplaceAll(s, " 7)", "\n\t\t7)")
+		s = strings.ReplaceAll(s, " 8)", "\n\t\t8)")
+		s = strings.ReplaceAll(s, " 9)", "\n\t\t9)")
+		return s
+	}
+
+	for idx, line := range lines {
+		trimmedLine := utils.TrimSlashes(line)
+
+		// Split the line into words
+		words := strings.Fields(trimmedLine)
+
+		// Add new line and tab to number dot
+		trimmedLine = addNewLineAndTabToNumberDot(trimmedLine)
+
+		if strings.Trim(trimmedLine, " ") == "" {
+			// do nothing
+		} else if len(words) == 0 {
+			invalidLinesList = append(invalidLinesList, trimmedLine)
+		} else if len(words) == 1 && len(words[0]) == 3 && strings.Contains(words[0], "-") {
+			invalidLinesList = append(invalidLinesList, trimmedLine)
+		} else if len(words) > 0 && utils.IsFullyCapitalized(words[0]) && !utils.StartsWithNumber(words[0]) && !utils.StartsWithSpecialCharacter(words[0]) {
+			// New key detected
+			if currentKey != "" {
+				keyWithoutSuffix := utils.RemoveSuffixes(currentKey)
+				mapRes[keyWithoutSuffix] = append(mapRes[keyWithoutSuffix], currentValue.String())
+			}
+			currentKey = utils.RemoveSuffixes(words[0])
+			currentValue.Reset()
+			currentValue.WriteString(trimmedLine)
+		} else {
+			// Continuation of the current value
+			if currentValue.Len() > 0 {
+				currentValue.WriteString(" ")
+			}
+			currentValue.WriteString(trimmedLine)
+		}
+
+		fmt.Printf("line %d: %s\n", idx, line)
+	}
+
+	// Add the last key-value pair
+	if currentKey != "" {
+		keyWithoutSuffix := utils.RemoveSuffixes(currentKey)
+		mapRes[keyWithoutSuffix] = append(mapRes[keyWithoutSuffix], currentValue.String())
+	}
+
+	for key, values := range mapRes {
+		// Check if word exist, if it does, add definition, otherwise create new word
+		spelling := strings.ToLower(key)
+		spelling = strings.Trim(spelling, ":")
 
 		if _, ok := dictObj.Words[spelling]; !ok {
 			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
