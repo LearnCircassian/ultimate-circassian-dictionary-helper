@@ -975,6 +975,28 @@ func convert17() {
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-En_Amjad.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Kbd-En_Amjad.json", dictObj.Id)
 
+	addNewLineAndTabToNumberDot := func(s string) string {
+		s = strings.ReplaceAll(s, " 1.", "\n1.")
+		s = strings.ReplaceAll(s, " 2.", "\n2.")
+		s = strings.ReplaceAll(s, " 3.", "\n3.")
+		s = strings.ReplaceAll(s, " 4.", "\n4.")
+		s = strings.ReplaceAll(s, " 5.", "\n5.")
+		s = strings.ReplaceAll(s, " 6.", "\n6.")
+		s = strings.ReplaceAll(s, " 7.", "\n7.")
+		s = strings.ReplaceAll(s, " 8.", "\n8.")
+		s = strings.ReplaceAll(s, " 9.", "\n9.")
+		s = strings.ReplaceAll(s, " 1)", "\n1)")
+		s = strings.ReplaceAll(s, " 2)", "\n2)")
+		s = strings.ReplaceAll(s, " 3)", "\n3)")
+		s = strings.ReplaceAll(s, " 4)", "\n4)")
+		s = strings.ReplaceAll(s, " 5)", "\n5)")
+		s = strings.ReplaceAll(s, " 6)", "\n6)")
+		s = strings.ReplaceAll(s, " 7)", "\n7)")
+		s = strings.ReplaceAll(s, " 8)", "\n8)")
+		s = strings.ReplaceAll(s, " 9)", "\n9)")
+		return s
+	}
+
 	// "1уеин": {"type":"intransitive verb","definitions":[{"meaning":"to bleat (of goats)"},{"meaning":"to stick with putty, to do up (ex.: window)"}]},
 	// covert file to json
 	var originalDict map[string]struct {
@@ -1002,7 +1024,8 @@ func convert17() {
 			dictObj.Words[key].Type = value.Type
 		}
 		for _, definition := range value.Definitions {
-			dictObj.Words[key].AddOneDefinition(definition.Meaning, []wordObject.Example{})
+			meaningAdjusted := addNewLineAndTabToNumberDot(definition.Meaning)
+			dictObj.Words[key].AddOneDefinition(meaningAdjusted, []wordObject.Example{})
 		}
 		fmt.Printf("Index %d key %s\n", idx, key)
 		idx++
@@ -1658,18 +1681,33 @@ func convert30() {
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Rus_ThreeVolumes.txt"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Rus_ThreeVolumes.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
-
 	entireFileStr := utils.ReadEntireFile(srcFilePath)
 	lines := strings.Split(entireFileStr, "\n")
 	mapRes := make(map[string][]string)
 	var currentKey string
 	var currentValue strings.Builder
 
+	addNewLineAndTabToNumberDot := func(s string) string {
+		s = strings.ReplaceAll(s, " 1.", "\n\t1.")
+		s = strings.ReplaceAll(s, " 2.", "\n\t2.")
+		s = strings.ReplaceAll(s, " 3.", "\n\t3.")
+		s = strings.ReplaceAll(s, " 4.", "\n\t4.")
+		s = strings.ReplaceAll(s, " 5.", "\n\t5.")
+		s = strings.ReplaceAll(s, " 6.", "\n\t6.")
+		s = strings.ReplaceAll(s, " 7.", "\n\t7.")
+		s = strings.ReplaceAll(s, " 8.", "\n\t8.")
+		s = strings.ReplaceAll(s, " 9.", "\n\t9.")
+		return s
+	}
+
 	for idx, line := range lines {
 		trimmedLine := utils.TrimSlashes(line)
 
 		// Split the line into words
 		words := strings.Fields(trimmedLine)
+
+		// Add new line and tab to number dot
+		trimmedLine = addNewLineAndTabToNumberDot(trimmedLine)
 
 		if len(words) == 0 {
 			invalidLinesList = append(invalidLinesList, trimmedLine)
@@ -1728,18 +1766,42 @@ func convert31() {
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tu-Ady_Hilmi.txt"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tu-Ady_Hilmi.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
-
 	entireFileStr := utils.ReadEntireFile(srcFilePath)
 	lines := strings.Split(entireFileStr, "\n")
 	mapRes := make(map[string][]string)
 	var currentKey string
 	var currentValue strings.Builder
 
+	addNewLineAndTabToNumberDot := func(s string) string {
+		s = strings.ReplaceAll(s, " 1.", "\n\t1.")
+		s = strings.ReplaceAll(s, " 2.", "\n\t2.")
+		s = strings.ReplaceAll(s, " 3.", "\n\t3.")
+		s = strings.ReplaceAll(s, " 4.", "\n\t4.")
+		s = strings.ReplaceAll(s, " 5.", "\n\t5.")
+		s = strings.ReplaceAll(s, " 6.", "\n\t6.")
+		s = strings.ReplaceAll(s, " 7.", "\n\t7.")
+		s = strings.ReplaceAll(s, " 8.", "\n\t8.")
+		s = strings.ReplaceAll(s, " 9.", "\n\t9.")
+		s = strings.ReplaceAll(s, " 1)", "\n\t\t1)")
+		s = strings.ReplaceAll(s, " 2)", "\n\t\t2)")
+		s = strings.ReplaceAll(s, " 3)", "\n\t\t3)")
+		s = strings.ReplaceAll(s, " 4)", "\n\t\t4)")
+		s = strings.ReplaceAll(s, " 5)", "\n\t\t5)")
+		s = strings.ReplaceAll(s, " 6)", "\n\t\t6)")
+		s = strings.ReplaceAll(s, " 7)", "\n\t\t7)")
+		s = strings.ReplaceAll(s, " 8)", "\n\t\t8)")
+		s = strings.ReplaceAll(s, " 9)", "\n\t\t9)")
+		return s
+	}
+
 	for idx, line := range lines {
 		trimmedLine := utils.TrimSlashes(line)
 
 		// Split the line into words
 		words := strings.Fields(trimmedLine)
+
+		// Add new line and tab to number dot
+		trimmedLine = addNewLineAndTabToNumberDot(trimmedLine)
 
 		if strings.Trim(trimmedLine, " ") == "" {
 			// do nothing
