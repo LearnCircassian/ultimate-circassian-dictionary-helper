@@ -46,6 +46,7 @@ func CallAllConverts() {
 	convert28()
 	convert29()
 	convert30()
+	convert31()
 
 	// print all the words in Circassian
 	fmt.Printf("\n--All the words in Circassian--\n")
@@ -567,7 +568,7 @@ func convert7() {
 
 // convert8() Ady-Tur_Huvaj.json
 func convert8() {
-	dictObj := wordObject.NewDictionaryObject("Хъуажь (2007)", 8, "Ady/Kbd", "Tr", "HTML")
+	dictObj := wordObject.NewDictionaryObject("Хъуажь - Circassian to Turkish (2007)", 8, "Ady/Kbd", "Tr", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Ady-Tur_Huvaj.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Ady-Tur_Huvaj.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -1533,7 +1534,7 @@ func convert27() {
 
 // convert28() Tur-Ady_Huvaj.json
 func convert28() {
-	dictObj := wordObject.NewDictionaryObject("Хъуажь (2007)", 28, "Tr", "Ady/Kbd", "HTML")
+	dictObj := wordObject.NewDictionaryObject("Хъуажь - Turkish to Circassian (2007)", 28, "Tr", "Ady/Kbd", "HTML")
 	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tur-Ady_Huvaj.json"
 	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tur-Ady_Huvaj.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
@@ -1702,6 +1703,80 @@ func convert30() {
 		// Check if word exist, if it does, add definition, otherwise create new word
 		spelling := strings.ToLower(key)
 		spelling = utils.ConvertIToCirStick(spelling)
+
+		if _, ok := dictObj.Words[spelling]; !ok {
+			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
+		}
+		for _, value := range values {
+			value = utils.ConvertIToCirStick(value)
+			dictObj.Words[spelling].AddOneDefinition(value, []wordObject.Example{})
+		}
+	}
+
+	// print invalid lines
+	fmt.Printf("\n--Invalid lines in %s:--\n", srcFilePath)
+	for idx, line := range invalidLinesList {
+		fmt.Printf("%d. %s\n", idx, line)
+	}
+
+	utils.CreateFileWithDictionaryObject(distFilePath, dictObj)
+}
+
+// convert31() Tu-Ady_Hilmi.txt
+func convert31() {
+	dictObj := wordObject.NewDictionaryObject("Ацумыжъ Хилми (2013)", 31, "Tr", "Ady", "JSON")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Tu-Ady_Hilmi.txt"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Tu-Ady_Hilmi.json", dictObj.Id)
+	invalidLinesList := make([]string, 0)
+
+	entireFileStr := utils.ReadEntireFile(srcFilePath)
+	lines := strings.Split(entireFileStr, "\n")
+	mapRes := make(map[string][]string)
+	var currentKey string
+	var currentValue strings.Builder
+
+	for idx, line := range lines {
+		trimmedLine := utils.TrimSlashes(line)
+
+		// Split the line into words
+		words := strings.Fields(trimmedLine)
+
+		if strings.Trim(trimmedLine, " ") == "" {
+			// do nothing
+		} else if len(words) == 0 {
+			invalidLinesList = append(invalidLinesList, trimmedLine)
+		} else if len(words) == 1 && len(words[0]) == 3 && strings.Contains(words[0], "-") {
+			invalidLinesList = append(invalidLinesList, trimmedLine)
+		} else if len(words) > 0 && utils.IsFullyCapitalized(words[0]) && !utils.StartsWithNumber(words[0]) && !utils.StartsWithSpecialCharacter(words[0]) {
+			// New key detected
+			if currentKey != "" {
+				keyWithoutSuffix := utils.RemoveSuffixes(currentKey)
+				mapRes[keyWithoutSuffix] = append(mapRes[keyWithoutSuffix], currentValue.String())
+			}
+			currentKey = utils.RemoveSuffixes(words[0])
+			currentValue.Reset()
+			currentValue.WriteString(trimmedLine)
+		} else {
+			// Continuation of the current value
+			if currentValue.Len() > 0 {
+				currentValue.WriteString(" ")
+			}
+			currentValue.WriteString(trimmedLine)
+		}
+
+		fmt.Printf("line %d: %s\n", idx, line)
+	}
+
+	// Add the last key-value pair
+	if currentKey != "" {
+		keyWithoutSuffix := utils.RemoveSuffixes(currentKey)
+		mapRes[keyWithoutSuffix] = append(mapRes[keyWithoutSuffix], currentValue.String())
+	}
+
+	for key, values := range mapRes {
+		// Check if word exist, if it does, add definition, otherwise create new word
+		spelling := strings.ToLower(key)
+		spelling = strings.Trim(spelling, ":")
 
 		if _, ok := dictObj.Words[spelling]; !ok {
 			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
