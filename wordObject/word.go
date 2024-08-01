@@ -127,6 +127,18 @@ func formatText(text string) string {
 		return "<span style='font-weight:bold'>" + html.EscapeString(innerText) + "</span>"
 	})
 }
+
+func formatMeaningText(meaning string) string {
+	lines := strings.Split(meaning, "\n")
+	var sb strings.Builder
+	for _, line := range lines {
+		tabs := strings.Count(line, "\t")
+		line = strings.Trim(line, "\t")
+		sb.WriteString(fmt.Sprintf("<div style='margin-left:%dem'>%s</div>", tabs, formatText(line)))
+	}
+	return sb.String()
+}
+
 func (w *WordObject) ToFullDefinitionHtml() string {
 	var sb strings.Builder
 
@@ -147,7 +159,7 @@ func (w *WordObject) ToFullDefinitionHtml() string {
 
 	sb.WriteString("<h3>Definitions:</h3>")
 	for i, definition := range w.Definitions {
-		sb.WriteString(fmt.Sprintf("<div style='margin-left:1em'><font color='darkblue'><span style='font-weight:bold'>%d.</span></font> %s</div>", i+1, formatText(definition.Meaning)))
+		sb.WriteString(fmt.Sprintf("<div style='margin-left:1em'><font color='darkblue'><span style='font-weight:bold'>%d.</span></font> %s</div>", i+1, formatMeaningText(definition.Meaning)))
 		if len(definition.Examples) > 0 {
 			for _, example := range definition.Examples {
 				sb.WriteString(fmt.Sprintf("<div style='margin-left:3em'>%s — %s</div>", formatText(example.Sentence), formatText(example.Translation)))
