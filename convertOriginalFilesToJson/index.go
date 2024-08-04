@@ -47,6 +47,7 @@ func CallAllConverts() {
 	convert29()
 	convert30()
 	convert31()
+	convert32()
 
 	// print all the words in Circassian
 	fmt.Printf("\n--All the words in Circassian--\n")
@@ -1860,6 +1861,74 @@ func convert31() {
 			value = utils.ConvertIToCirStick(value)
 			dictObj.Words[spelling].AddOneDefinition(value, []wordObject.Example{})
 		}
+	}
+
+	// print invalid lines
+	fmt.Printf("\n--Invalid lines in %s:--\n", srcFilePath)
+	for idx, line := range invalidLinesList {
+		fmt.Printf("%d. %s\n", idx, line)
+	}
+
+	utils.CreateFileWithDictionaryObject(distFilePath, dictObj)
+}
+
+// convert32() Rus-Kbd_Nalchik_2013.txt
+func convert32() {
+	dictObj := wordObject.NewDictionaryObject("Еджап1эм папщ1э урыс-адыгэ псалъалъэ (2013)", 32, "Ru", "Kbd", "JSON")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Rus-Kbd_Nalchik_2013.txt"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Rus-Kbd_Nalchik_2013.json", dictObj.Id)
+	invalidLinesList := make([]string, 0)
+	entireFileStr := utils.ReadEntireFile(srcFilePath)
+	lines := strings.Split(entireFileStr, "\n")
+
+	addNewLineAndTabToNumberDot := func(s string) string {
+		s = strings.ReplaceAll(s, " 1.", "\n\t1.")
+		s = strings.ReplaceAll(s, " 2.", "\n\t2.")
+		s = strings.ReplaceAll(s, " 3.", "\n\t3.")
+		s = strings.ReplaceAll(s, " 4.", "\n\t4.")
+		s = strings.ReplaceAll(s, " 5.", "\n\t5.")
+		s = strings.ReplaceAll(s, " 6.", "\n\t6.")
+		s = strings.ReplaceAll(s, " 7.", "\n\t7.")
+		s = strings.ReplaceAll(s, " 8.", "\n\t8.")
+		s = strings.ReplaceAll(s, " 9.", "\n\t9.")
+		s = strings.ReplaceAll(s, " 1)", "\n\t\t1)")
+		s = strings.ReplaceAll(s, " 2)", "\n\t\t2)")
+		s = strings.ReplaceAll(s, " 3)", "\n\t\t3)")
+		s = strings.ReplaceAll(s, " 4)", "\n\t\t4)")
+		s = strings.ReplaceAll(s, " 5)", "\n\t\t5)")
+		s = strings.ReplaceAll(s, " 6)", "\n\t\t6)")
+		s = strings.ReplaceAll(s, " 7)", "\n\t\t7)")
+		s = strings.ReplaceAll(s, " 8)", "\n\t\t8)")
+		s = strings.ReplaceAll(s, " 9)", "\n\t\t9)")
+		return s
+	}
+
+	for idx, line := range lines {
+		line = strings.TrimSpace(line)
+		line = strings.Trim(line, "\u200B")
+		line = strings.Trim(line, "\uFEFF")
+		line = strings.Trim(line, "\u200D")
+		line = strings.Trim(line, "\u200C")
+		line = strings.Trim(line, "")
+
+		// Split the line into words
+		words := strings.Fields(line)
+
+		if len(words) == 0 {
+			invalidLinesList = append(invalidLinesList, line)
+			continue
+		}
+
+		spelling := strings.ToLower(words[0])
+		value := addNewLineAndTabToNumberDot(line)
+		value = utils.ConvertIToCirStick(value)
+
+		if _, ok := dictObj.Words[spelling]; !ok {
+			dictObj.Words[spelling] = wordObject.NewWordObject(spelling, "")
+		}
+		dictObj.Words[spelling].AddOneDefinition(value, []wordObject.Example{})
+
+		fmt.Printf("line %d: %s\n", idx, line)
 	}
 
 	// print invalid lines
