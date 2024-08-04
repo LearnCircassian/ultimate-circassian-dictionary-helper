@@ -15,41 +15,38 @@ var (
 )
 
 func CallAllConverts() {
-	/*
-		convert0()  // Ady-Ady_AIG.json
-		convert1()  // Ady-Ady_AP.json
-		convert2()  // Ady-Ara.json
-		convert3()  // Ady-En.json
-		convert4()  // Ady-En_Adam.json
-		convert5()  // Ady-Rus_Qarden.json
-		convert6()  // Ady-Rus_Sherdjes.json
-		convert7()  // Ady-Rus_Tharkaho.json
-		convert8()  // Ady-Tur_Huvaj.json
-		convert9()  // En-Ady.json
-		convert10() // En-Ady_Adam.json
-		convert11() // En-Kbd-Jonty.json
-		convert12() // En-Kbd-Ziwar.json
-		convert13() // Kbd-Ar-Jonty.json
-		convert14() // Kbd-En-2-Jonty.json
-		convert15() // Kbd-En-Jonty.json
-		convert16() // Kbd-En-Ziwar.json
-		convert17()
-		convert18()
-		convert19()
-		convert20()
-		convert21()
-		convert22()
-		convert23()
-		convert24()
-		convert25()
-		convert26()
-		convert27()
-		convert28()
-		convert29()
-		convert30()
-		convert31()
-
-	*/
+	convert0()  // Ady-Ady_AIG.json
+	convert1()  // Ady-Ady_AP.json
+	convert2()  // Ady-Ara.json
+	convert3()  // Ady-En.json
+	convert4()  // Ady-En_Adam.json
+	convert5()  // Ady-Rus_Qarden.json
+	convert6()  // Ady-Rus_Sherdjes.json
+	convert7()  // Ady-Rus_Tharkaho.json
+	convert8()  // Ady-Tur_Huvaj.json
+	convert9()  // En-Ady.json
+	convert10() // En-Ady_Adam.json
+	convert11() // En-Kbd-Jonty.json
+	convert12() // En-Kbd-Ziwar.json
+	convert13() // Kbd-Ar-Jonty.json
+	convert14() // Kbd-En-2-Jonty.json
+	convert15() // Kbd-En-Jonty.json
+	convert16() // Kbd-En-Ziwar.json
+	convert17()
+	convert18()
+	convert19()
+	convert20()
+	convert21()
+	convert22()
+	convert23()
+	convert24()
+	convert25()
+	convert26()
+	convert27()
+	convert28()
+	convert29()
+	convert30()
+	convert31()
 	convert32()
 
 	// print all the words in Circassian
@@ -1907,7 +1904,12 @@ func convert32() {
 	}
 
 	for idx, line := range lines {
-		line = strings.Trim(line, " ")
+		line = strings.TrimSpace(line)
+		line = strings.Trim(line, "\u200B")
+		line = strings.Trim(line, "\uFEFF")
+		line = strings.Trim(line, "\u200D")
+		line = strings.Trim(line, "\u200C")
+		line = strings.Trim(line, "")
 
 		// Split the line into words
 		words := strings.Fields(line)
