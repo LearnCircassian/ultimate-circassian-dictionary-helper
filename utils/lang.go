@@ -75,6 +75,25 @@ func ConvertIToCirStick(str string) string {
 	str = strings.ReplaceAll(str, "лI", "л1")
 	str = strings.ReplaceAll(str, "фI", "ф1")
 	str = strings.ReplaceAll(str, "щI", "щ1")
+
+	str = strings.ReplaceAll(str, "Ӏа", "1а")
+	str = strings.ReplaceAll(str, "Ӏо", "1о")
+	str = strings.ReplaceAll(str, "Ӏе", "1е")
+	str = strings.ReplaceAll(str, "Ӏя", "1я")
+	str = strings.ReplaceAll(str, "Ӏы", "1ы")
+	str = strings.ReplaceAll(str, "Ӏэ", "1э")
+	str = strings.ReplaceAll(str, "Ӏи", "1и")
+	str = strings.ReplaceAll(str, "Ӏу", "1у")
+	str = strings.ReplaceAll(str, "кӀ", "к1")
+	str = strings.ReplaceAll(str, "шӀ", "ш1")
+	str = strings.ReplaceAll(str, "пӀ", "п1")
+	str = strings.ReplaceAll(str, "цӀ", "ц1")
+	str = strings.ReplaceAll(str, "сӀ", "с1")
+	str = strings.ReplaceAll(str, "чӀ", "ч1")
+	str = strings.ReplaceAll(str, "тӀ", "т1")
+	str = strings.ReplaceAll(str, "лӀ", "л1")
+	str = strings.ReplaceAll(str, "фӀ", "ф1")
+	str = strings.ReplaceAll(str, "щӀ", "щ1")
 	return str
 }
 
@@ -101,7 +120,7 @@ func StartsWithSpecialCharacter(s string) bool {
 		return false
 	}
 	r := rune(s[0])
-	return !unicode.IsLetter(r) || r == '_' || r == '—' || r == '…'
+	return !unicode.IsLetter(r) || r == '_' || r == '—' || r == '…' || r == '♦' || r == '■' || r == '•'
 }
 
 // Function to trim leading and trailing spaces and slashes
