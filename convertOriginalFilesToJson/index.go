@@ -1981,7 +1981,20 @@ func convert33() {
 		return s
 	}
 
+	removeFirstWordSpaces := func(line string) string {
+		re := regexp.MustCompile(`^\s*([А-ЯЁ ]+)`)
+		match := re.FindStringSubmatch(line)
+		if len(match) > 0 {
+			capitalWordWithSpaces := match[1]
+			capitalWordWithoutSpaces := strings.ReplaceAll(capitalWordWithSpaces, " ", "")
+			modifiedLine := strings.Replace(line, capitalWordWithSpaces, capitalWordWithoutSpaces, 1)
+			return modifiedLine
+		}
+		return line
+	}
+
 	for idx, line := range lines {
+		line = removeFirstWordSpaces(line)
 		trimmedLine := utils.TrimSlashes(line)
 
 		// Split the line into words
