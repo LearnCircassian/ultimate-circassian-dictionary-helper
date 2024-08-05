@@ -1982,18 +1982,15 @@ func convert33() {
 	}
 
 	removeFirstWordSpaces := func(line string) string {
-		re := regexp.MustCompile(`^\s*([А-ЯЁ ]+)`)
-		match := re.FindStringSubmatch(line)
-		if len(match) > 0 {
-			capitalWordWithSpaces := match[1]
-			capitalWordWithoutSpaces := strings.ReplaceAll(capitalWordWithSpaces, " ", "")
-			modifiedLine := strings.Replace(line, capitalWordWithSpaces, capitalWordWithoutSpaces, 1)
-			return modifiedLine
-		}
-		return line
+		// Regular expression to match spaces between two capitalized Cyrillic letters or a letter and the letter 'I'
+		re := regexp.MustCompile(`([А-ЯЁI])\s+([А-ЯЁI])`)
+		// Replace the matched spaces with an empty string
+		modifiedLine := re.ReplaceAllString(line, "$1$2")
+		return modifiedLine
 	}
 
 	for idx, line := range lines {
+		line = strings.TrimSpace(line)
 		line = removeFirstWordSpaces(line)
 		trimmedLine := utils.TrimSlashes(line)
 
