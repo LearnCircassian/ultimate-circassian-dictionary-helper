@@ -49,6 +49,7 @@ func CallAllConverts() {
 	convert31()
 	convert32()
 	convert33()
+	convert34()
 
 	// print all the words in Circassian
 	fmt.Printf("\n--All the words in Circassian--\n")
@@ -2054,11 +2055,11 @@ func convert33() {
 	utils.CreateFileWithDictionaryObject(distFilePath, dictObj)
 }
 
-// convert34() Rus-Kbd_Nalchik_2013.txt
+// convert34() Kbd-Ru-2008.txt
 func convert34() {
-	dictObj := wordObject.NewDictionaryObject("адыгэ-урыс псалъалъэ (2008)", 34, "Ru", "Kbd", "JSON")
-	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Rus-Kbd_Nalchik_2013.txt"
-	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Rus-Kbd_Nalchik_2013.json", dictObj.Id)
+	dictObj := wordObject.NewDictionaryObject("адыгэ-урыс псалъалъэ (2008)", 34, "Kbd", "Ru", "JSON")
+	srcFilePath := "D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\srcDicts\\Kbd-Ru-2008.txt"
+	distFilePath := fmt.Sprintf("D:\\Github\\Cir\\ultimate-circassian-dictionary-helper\\distDicts\\%d.Kbd-Ru-2008.json", dictObj.Id)
 	invalidLinesList := make([]string, 0)
 	entireFileStr := utils.ReadEntireFile(srcFilePath)
 	lines := strings.Split(entireFileStr, "\n")
@@ -2102,6 +2103,7 @@ func convert34() {
 		}
 
 		spelling := strings.ToLower(words[0])
+		spelling = utils.ConvertIToCirStick(spelling)
 		value := addNewLineAndTabToNumberDot(line)
 		value = utils.ConvertIToCirStick(value)
 
