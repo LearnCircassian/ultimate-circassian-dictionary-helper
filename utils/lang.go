@@ -36,6 +36,7 @@ func IsCyrillic(word string) bool {
 
 func ConvertIToCirStick(str string) string {
 	str = strings.ReplaceAll(str, "ӏ", "1")
+	str = strings.ReplaceAll(str, "ӏ", "1")
 	// small i
 	str = strings.ReplaceAll(str, "iа", "1а")
 	str = strings.ReplaceAll(str, "iо", "1о")
